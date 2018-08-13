@@ -3,6 +3,11 @@
 const resolve = require('path').resolve
 
 module.exports = {
+  build: {
+    vendor: ['vuetify']
+  },
+  plugins: ['~plugins/vuetify.js'],
+
   /*
   ** Headers of the page
   */
@@ -30,14 +35,20 @@ module.exports = {
       }
     ]
   },
+
   /*
   ** Global CSS
   */
-  css: ['~assets/css/main.css'],
+  css: [
+    { src: '~assets/css/app.styl', lang: 'styl' },
+    '~assets/css/main.css'
+  ],
+
   /*
   ** Customize the progress-bar color
   */
   loading: { color: '#744d82' },
+
   /*
   ** Point to resources
   */

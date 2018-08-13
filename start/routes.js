@@ -15,4 +15,14 @@
 
 const Route = use('Route')
 
+Route.group(() => {
+  Route.post('login', 'SessionController.login')
+
+}).middleware(['guest'])
+
+Route.group(() => {
+  Route.get('logout', 'SessionController.delete')
+
+}).middleware(['auth'])
+
 Route.any('*', 'NuxtController.render')
