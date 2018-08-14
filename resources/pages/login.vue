@@ -7,8 +7,9 @@
             <v-card class="elevation-12 pa-3">
               <v-card-text>
                 <div class="layout column align-center">
-                  <!--<img src="/bg/1.png" alt="Vue Material Admin" width="120" height="120">-->
-                  <h1 class="flex my-4 primary--text">Libra of Constellation</h1>
+                  <img src="/logo.png" alt="Vue Material Admin" width="240" height="60">
+                  <!--<h1 class="flex my-4 primary&#45;&#45;text">&nbsp;</h1>-->
+                  <h1>&nbsp;</h1>
                 </div>
                 <v-form>
                   <v-text-field append-icon="person" name="login" label="Login" type="text" v-model="model.username">
