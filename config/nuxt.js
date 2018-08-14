@@ -12,7 +12,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'Adonuxt',
+    title: 'Libra of Constellation',
     meta: [
       {
         charset: 'utf-8'
@@ -24,7 +24,7 @@ module.exports = {
       {
         hid: 'description',
         name: 'description',
-        content: 'Adonuxt project'
+        content: 'Libra of Constellation'
       }
     ],
     link: [

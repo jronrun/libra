@@ -1,41 +1,28 @@
 <template>
-  <v-app id="inspire">
+  <v-app id="login" class="primary">
     <v-content>
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md4>
-            <v-card class="elevation-12">
-              <v-toolbar dark color="primary">
-                <v-toolbar-title>Login form</v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-tooltip bottom>
-                  <v-btn
-                    slot="activator"
-                    :href="source"
-                    icon
-                    large
-                    target="_blank"
-                  >
-                    <v-icon large>code</v-icon>
-                  </v-btn>
-                  <span>Source</span>
-                </v-tooltip>
-                <v-tooltip right>
-                  <v-btn slot="activator" icon large href="https://codepen.io/johnjleider/pen/wyYVVj" target="_blank">
-                    <v-icon large>mdi-codepen</v-icon>
-                  </v-btn>
-                  <span>Codepen</span>
-                </v-tooltip>
-              </v-toolbar>
+          <v-flex xs12 sm8 md4 lg4>
+            <v-card class="elevation-12 pa-3">
               <v-card-text>
+                <div class="layout column align-center">
+                  <!--<img src="/bg/1.png" alt="Vue Material Admin" width="120" height="120">-->
+                  <h1 class="flex my-4 primary--text">Libra of Constellation</h1>
+                </div>
                 <v-form>
-                  <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
-                  <v-text-field id="password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
+                  <v-text-field append-icon="person" name="login" label="Login" type="text" v-model="model.username">
+                  </v-text-field>
+                  <v-text-field append-icon="lock" name="password" label="Password" id="password" type="password" v-model="model.password">
+                  </v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
+                <v-btn icon>
+                  <v-icon color="blue">fa fa-facebook-square fa-lg</v-icon>
+                </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="primary">Login</v-btn>
+                <v-btn block color="primary" @click="login" :loading="loading">Login</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -47,12 +34,40 @@
 
 <script>
   export default {
+    layout: 'blank',
     data: () => ({
-      drawer: null
+      loading: false,
+      model: {
+        username: '',
+        password: ''
+      }
     }),
 
-    props: {
-      source: String
+    head () {
+      return {
+        title: 'Libra Login',
+        meta: [
+          { hid: 'description', name: 'description', content: 'My custom description' }
+        ]
+      }
+    },
+
+    methods: {
+      login () {
+        this.loading = true;
+      }
     }
-  }
+
+  };
 </script>
+<style scoped lang="css">
+  #login {
+    height: 50%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    z-index: 0;
+  }
+</style>
