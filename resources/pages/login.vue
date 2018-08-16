@@ -4,17 +4,29 @@
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4 lg4>
-            <v-card class="elevation-12 pa-3">
+            <v-card class="elevation-20">
               <v-card-text>
                 <div class="layout column align-center">
-                  <img src="/logo.png" alt="Vue Material Admin" width="240" height="60">
+                  <h5>&nbsp;</h5>
+                  <img src="/logo.png" alt="Libra of Constellation" width="240" height="60">
                   <!--<h1 class="flex my-4 primary&#45;&#45;text">&nbsp;</h1>-->
                   <h1>&nbsp;</h1>
                 </div>
                 <v-form>
-                  <v-text-field append-icon="person" name="login" label="Login" type="text" v-model="model.username">
-                  </v-text-field>
-                  <v-text-field append-icon="lock" name="password" label="Password" id="password" type="password" v-model="model.password">
+                  <v-text-field prepend-icon="person"
+                                label="E-mail"
+                                type="text"
+                                name="email"
+                                v-validate="'required|email'"
+                                :error-messages="errors.collect('email')"
+                                data-vv-as="邮箱地址"
+                  ></v-text-field>
+
+                  <v-text-field
+                    :append-icon="isVisiblePassword ? 'visibility_off' : 'visibility'"
+                    :type="isVisiblePassword ? 'text' : 'password'"
+                    @click:append="isVisiblePassword = !isVisiblePassword"
+                    prepend-icon="lock" name="password" label="Password">
                   </v-text-field>
                 </v-form>
               </v-card-text>
@@ -34,28 +46,38 @@
 </template>
 
 <script>
+  import pi from '~pi'
+  import validator from '~/plugins/validator'
+
   export default {
+
     layout: 'blank',
     data: () => ({
-      loading: false,
-      model: {
-        username: '',
-        password: ''
-      }
+      email: '',
+
+      isVisiblePassword: false,
+      loading: false
     }),
 
-    head () {
+    head() {
       return {
-        title: 'Libra Login',
+        title: 'Login - Libra',
         meta: [
-          { hid: 'description', name: 'description', content: 'My custom description' }
+          {hid: 'description', name: 'description', content: 'My custom description'}
         ]
       }
     },
 
     methods: {
-      login () {
-        this.loading = true;
+      login() {
+        this.$validator.validateAll().then((result, a) => {
+          if (result) { // eslint-disable-next-line
+            this.loading = true
+            console.log('From Submitted!');
+            return;
+          }
+          console.log('Correct them errors!');
+        });
       }
     }
 

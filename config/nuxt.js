@@ -4,9 +4,26 @@ const resolve = require('path').resolve
 
 module.exports = {
   build: {
-    vendor: ['vuetify']
+    extend (config, { isClient, isServer, isDev }) {
+      config.resolve.alias['~pi'] = '~/plugins/PI.js'
+    },
+    // https://github.com/webpack-contrib/webpack-bundle-analyzer
+    analyze: {
+      openAnalyzer: false,
+      analyzerMode: 'static',
+      generateStatsFile: true,
+      statsFilename: 'webpack-stats.json'
+    },
+    vendor: [
+      '~pi',
+      'vuetify',
+      '~/plugins/vue-i18n.js',
+      'axios'
+    ]
   },
-  plugins: ['~plugins/vuetify.js'],
+  plugins: [
+    '~plugins/vuetify.js', '~plugins/vue-i18n.js'
+  ],
 
   /*
   ** Headers of the page

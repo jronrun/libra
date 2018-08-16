@@ -36,6 +36,8 @@
     "lz-string": "^1.4.4",
     "nuxt": "latest",
     "pg": "^7.4.3",
+    "vee-validate": "^2.1.0-beta.7",
+    "vue-i18n": "^8.0.0",
     "vuetify": "^1.1.10",
     "youch": "^2.0.4"
   },
