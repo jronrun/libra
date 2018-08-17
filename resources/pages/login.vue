@@ -21,7 +21,7 @@
                                 :error-messages="errors.collect('email')"
                                 data-vv-as="邮箱地址"
                   ></v-text-field>
-
+                  <p>{{ $t('about.introduction') }}</p>
                   <v-text-field
                     :append-icon="isVisiblePassword ? 'visibility_off' : 'visibility'"
                     :type="isVisiblePassword ? 'text' : 'password'"
@@ -70,6 +70,15 @@
 
     methods: {
       login() {
+        // if (this.isVisiblePassword) {
+        //   this.$store.commit('SET_LANG', 'en')
+        // } else {
+        //   this.$store.commit('SET_LANG', 'zh')
+        // }
+        // this.$i18n.locale = this.$store.state.locale
+
+        this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN')
+
         this.$validator.validateAll().then((result, a) => {
           if (result) { // eslint-disable-next-line
             this.loading = true

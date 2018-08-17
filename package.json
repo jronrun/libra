@@ -23,7 +23,7 @@
     "@adonisjs/fold": "^4.0.5",
     "@adonisjs/framework": "^5.0.8",
     "@adonisjs/ignitor": "^2.0.7",
-    "@adonisjs/lucid": "^6.1.0",
+    "@adonisjs/lucid": "^6.1.1",
     "@adonisjs/mail": "^3.0.8",
     "@adonisjs/session": "^1.0.19",
     "@adonisjs/shield": "^1.0.4",
@@ -38,8 +38,8 @@
     "pg": "^7.4.3",
     "vee-validate": "^2.1.0-beta.7",
     "vue-i18n": "^8.0.0",
-    "vuetify": "^1.1.10",
-    "youch": "^2.0.4"
+    "vuetify": "^1.1.13",
+    "youch": "^2.0.9"
   },
   "standard": {
     "global": [

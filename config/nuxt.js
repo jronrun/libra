@@ -17,9 +17,13 @@ module.exports = {
     vendor: [
       '~pi',
       'vuetify',
-      '~/plugins/vue-i18n.js',
+      'vue-i18n',
       'axios'
     ]
+  },
+
+  router: {
+
   },
   plugins: [
     '~plugins/vuetify.js', '~plugins/vue-i18n.js'
