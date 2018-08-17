@@ -68,6 +68,11 @@
       }
     },
 
+    beforeMount() {
+      console.log(this)
+      this.$libra.restore(this)
+    },
+
     methods: {
       login() {
         // if (this.isVisiblePassword) {
@@ -77,7 +82,8 @@
         // }
         // this.$i18n.locale = this.$store.state.locale
 
-        this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN', this)
+        // this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN', this)
+        // this.$store.dispatch('increment')
 
         this.$validator.validateAll().then((result, a) => {
           if (result) { // eslint-disable-next-line

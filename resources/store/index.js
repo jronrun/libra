@@ -15,3 +15,9 @@ export const mutations = {
     }
   }
 }
+
+export const actions = {
+  increment (context) {
+
+  }
+}

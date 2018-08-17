@@ -3,23 +3,23 @@ import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n)
 
-export default ({ app, store }) => {
+export default ({app, store}) => {
 
-  const defaultLocale = 'en'
-  const loadedLanguages = [defaultLocale]
+  const localeEn = 'en'
+  const loadedLanguages = [localeEn]
 
   // Set i18n instance on app
   // This way we can use it in middleware and pages asyncData/fetch
   app.i18n = new VueI18n({
     locale: store.state.locale,
-    fallbackLocale: defaultLocale,
+    fallbackLocale: localeEn,
     messages: {
-      [defaultLocale]: require('~/locales/en.json')
+      [localeEn]: require('~/locales/en.json')
     }
   })
 
   // vee-validate: this.$validator
-  app.i18n.change = (localeName, { $validator } = {}) => {
+  app.i18n.change = (localeName, {$validator} = {}) => {
     if (!store.state.locales.includes(localeName)) {
       console.warn(`There is none defined locale for ${localeName}`)
       return
