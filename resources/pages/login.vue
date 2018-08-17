@@ -77,7 +77,7 @@
         // }
         // this.$i18n.locale = this.$store.state.locale
 
-        this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN')
+        this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN', this)
 
         this.$validator.validateAll().then((result, a) => {
           if (result) { // eslint-disable-next-line

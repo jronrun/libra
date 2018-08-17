@@ -18,7 +18,8 @@ export default ({ app, store }) => {
     }
   })
 
-  app.i18n.change = (localeName) => {
+  // vee-validate: this.$validator
+  app.i18n.change = (localeName, { $validator }) => {
     if (!store.state.locales.includes(localeName)) {
       console.warn(`There is none defined locale for ${localeName}`)
       return
@@ -27,7 +28,17 @@ export default ({ app, store }) => {
     loadLanguageAsync(localeName).then(() => {
       store.commit('SET_LANG', localeName)
       app.i18n.locale = store.state.locale
+
+      changeValidateIfExist(localeName, $validator)
     })
+  }
+
+  const changeValidateIfExist = (localeName, validator) => {
+    if (validator) {
+      import(`vee-validate/dist/locale/${localeName}`).then(locale => {
+        validator.localize(localeName, locale)
+      })
+    }
   }
 
   const loadLanguageAsync = (localeName) => {
