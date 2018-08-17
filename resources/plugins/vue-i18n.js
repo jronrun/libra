@@ -19,7 +19,7 @@ export default ({ app, store }) => {
   })
 
   // vee-validate: this.$validator
-  app.i18n.change = (localeName, { $validator }) => {
+  app.i18n.change = (localeName, { $validator } = {}) => {
     if (!store.state.locales.includes(localeName)) {
       console.warn(`There is none defined locale for ${localeName}`)
       return
