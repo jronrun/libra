@@ -2,6 +2,8 @@ import pi from '~pi'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
+import * as types from '~types'
+
 Vue.use(VueI18n)
 
 export default ({app, store}) => {
@@ -27,7 +29,7 @@ export default ({app, store}) => {
     }
 
     loadLanguageAsync(localeName).then(() => {
-      store.commit('SET_LANG', localeName)
+      store.commit(types.SET_LANG, localeName)
       app.i18n.locale = store.state.locale
 
       changeValidateIfExist(localeName, $validator, validatorDictionary)

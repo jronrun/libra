@@ -1,3 +1,4 @@
+import * as types from '~types'
 
 export const state = () => ({
   // locale name keep same with vee-validate
@@ -9,7 +10,7 @@ export const state = () => ({
 })
 
 export const mutations = {
-  SET_LANG(state, locale) {
+  [types.SET_LANG](state, locale) {
     if (state.locales.includes(locale)) {
       state.locale = locale
     }
