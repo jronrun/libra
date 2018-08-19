@@ -26,6 +26,7 @@
                     :append-icon="isVisiblePassword ? 'visibility_off' : 'visibility'"
                     :type="isVisiblePassword ? 'text' : 'password'"
                     @click:append="isVisiblePassword = !isVisiblePassword"
+                    @keyup.enter="login"
                     prepend-icon="lock" name="password" label="Password">
                   </v-text-field>
                 </v-form>
@@ -69,7 +70,6 @@
     },
 
     beforeMount() {
-      console.log(this)
       this.$libra.restore(this)
     },
 
