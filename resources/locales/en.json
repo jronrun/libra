@@ -1,5 +1,11 @@
 {
-  "about": {
-    "introduction": "test en"
+  "account": {
+    "email": "E-mail",
+    "password": "Password"
+  },
+  "login": {
+    "title": "Login - Libra",
+    "description": "libra",
+    "submit": "Login"
   }
 }

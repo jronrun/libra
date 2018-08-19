@@ -13,30 +13,37 @@
                   <h1>&nbsp;</h1>
                 </div>
                 <v-form>
-                  <v-text-field prepend-icon="person"
-                                label="E-mail"
-                                type="text"
-                                name="email"
-                                v-validate="'required|email'"
-                                :error-messages="errors.collect('email')"
-                                data-vv-as="邮箱地址"
-                  ></v-text-field>
-                  <p>{{ $t('about.introduction') }}</p>
                   <v-text-field
-                    :append-icon="isVisiblePassword ? 'visibility_off' : 'visibility'"
+                    name="email"
+                    type="text"
+                    v-model="account.email"
+                    prepend-icon="person"
+                    :label="$t('account.email')"
+                    :data-vv-as="$t('account.email')"
+                    v-validate="'required|email'"
+                    :error-messages="errors.collect('email')"
+                  ></v-text-field>
+                  <v-text-field
+                    name="password"
                     :type="isVisiblePassword ? 'text' : 'password'"
+                    v-model="account.password"
+                    :append-icon="isVisiblePassword ? 'visibility_off' : 'visibility'"
                     @click:append="isVisiblePassword = !isVisiblePassword"
                     @keyup.enter="login"
-                    prepend-icon="lock" name="password" label="Password">
-                  </v-text-field>
+                    :label="$t('account.password')"
+                    :data-vv-as="$t('account.password')"
+                    v-validate="'required'"
+                    prepend-icon="lock"
+                    :error-messages="errors.collect('password')"
+                  ></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn icon>
-                  <v-icon color="blue">fa fa-facebook-square fa-lg</v-icon>
-                </v-btn>
+                <!--<v-btn icon>-->
+                  <!--<v-icon color="blue">fa fa-facebook-square fa-lg</v-icon>-->
+                <!--</v-btn>-->
                 <v-spacer></v-spacer>
-                <v-btn block color="primary" @click="login" :loading="loading">Login</v-btn>
+                <v-btn block color="primary" @click="login" :loading="loading">{{$t('login.submit')}}</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -54,17 +61,19 @@
 
     layout: 'blank',
     data: () => ({
-      email: '',
-
+      account: {
+        email: '',
+        password: ''
+      },
       isVisiblePassword: false,
       loading: false
     }),
 
     head() {
       return {
-        title: 'Login - Libra',
+        title: this.$t('login.title'),
         meta: [
-          {hid: 'description', name: 'description', content: 'My custom description'}
+          {hid: 'description', name: 'description', content: this.$t('login.description')}
         ]
       }
     },
@@ -75,15 +84,7 @@
 
     methods: {
       login() {
-        // if (this.isVisiblePassword) {
-        //   this.$store.commit('SET_LANG', 'en')
-        // } else {
-        //   this.$store.commit('SET_LANG', 'zh')
-        // }
-        // this.$i18n.locale = this.$store.state.locale
-
         // this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN', this)
-        // this.$store.dispatch('increment')
 
         this.$validator.validateAll().then((result, a) => {
           if (result) { // eslint-disable-next-line

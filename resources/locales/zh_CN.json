@@ -1,5 +1,11 @@
 {
-  "about": {
-    "introduction": "测试中文"
+  "account": {
+    "email": "邮箱",
+    "password": "密码"
+  },
+  "login": {
+    "title": "登录 - 天秤座",
+    "description": "天秤座",
+    "submit": "登录"
   }
 }
