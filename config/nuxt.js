@@ -30,6 +30,7 @@ module.exports = {
     { src: '~plugins/persist.js', ssr: false },
     '~plugins/vuetify.js', '~plugins/vue-i18n.js'
   ],
+  middleware: [],
 
   /*
   ** Headers of the page

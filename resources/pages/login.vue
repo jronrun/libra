@@ -79,7 +79,10 @@
     },
 
     beforeMount() {
-      this.$libra.restore(this)
+      this.$libra.restore(this, () => this.$t('login.messages'))
+    },
+
+    mounted() {
     },
 
     methods: {

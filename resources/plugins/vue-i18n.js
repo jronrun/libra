@@ -1,3 +1,4 @@
+import pi from '~pi'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
@@ -19,7 +20,7 @@ export default ({app, store}) => {
   })
 
   // vee-validate: this.$validator
-  app.i18n.change = (localeName, {$validator} = {}) => {
+  app.i18n.change = (localeName, {$validator} = {}, validatorDictionary = {}) => {
     if (!store.state.locales.includes(localeName)) {
       console.warn(`There is none defined locale for ${localeName}`)
       return
@@ -29,14 +30,18 @@ export default ({app, store}) => {
       store.commit('SET_LANG', localeName)
       app.i18n.locale = store.state.locale
 
-      changeValidateIfExist(localeName, $validator)
+      changeValidateIfExist(localeName, $validator, validatorDictionary)
     })
   }
 
-  const changeValidateIfExist = (localeName, validator) => {
+  const changeValidateIfExist = (localeName, validator, validatorDictionary = {}) => {
     if (validator) {
-      import(`vee-validate/dist/locale/${localeName}`).then(locale => {
-        validator.localize(localeName, locale)
+      if (pi.isFunction(validatorDictionary)) {
+        validatorDictionary = JSON.parse(JSON.stringify(validatorDictionary() || {}))
+      }
+
+      import(`vee-validate/dist/locale/${localeName}`).then(localeDictionary => {
+        validator.localize(localeName, Object.assign({}, localeDictionary, validatorDictionary))
       })
     }
   }

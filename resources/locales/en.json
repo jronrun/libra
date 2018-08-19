@@ -6,6 +6,17 @@
   "login": {
     "title": "Login - Libra",
     "description": "libra",
-    "submit": "Login"
+    "submit": "Login",
+    "messages": {
+      "custom": {
+        "email": {
+          "required": "Please input your account.",
+          "email": "Please input your email account."
+        },
+        "password": {
+          "required": "Please input your password."
+        }
+      }
+    }
   }
 }

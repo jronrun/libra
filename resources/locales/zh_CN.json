@@ -6,6 +6,17 @@
   "login": {
     "title": "登录 - 天秤座",
     "description": "天秤座",
-    "submit": "登录"
+    "submit": "登录",
+    "messages": {
+      "custom": {
+        "email": {
+          "required": "请输入邮箱账号.",
+          "email": "请输入邮箱账号."
+        },
+        "password": {
+          "required": "请输入邮箱账号密码."
+        }
+      }
+    }
   }
 }

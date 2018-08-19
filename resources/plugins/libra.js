@@ -15,11 +15,10 @@ Libra.install = function (Vue, options) {
      *  this.$libra.restore(this)
      * }
      * </pre>
-     * @param thisOfComponent
      */
-    restore: (thisOfComponent) => {
+    restore: (thisOfComponent, validatorDictionary = {}) => {
       let data = pi.store(libra_key)
-      thisOfComponent.$i18n.change(data.locale, thisOfComponent)
+      thisOfComponent.$i18n.change(data.locale, thisOfComponent, validatorDictionary)
     }
 
   }
