@@ -1,3 +1,5 @@
+'use strict'
+
 import lz from 'lz-string'
 
 import isNull from 'lodash/isNull'

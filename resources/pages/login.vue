@@ -7,10 +7,10 @@
             <v-card class="elevation-20">
               <v-card-text>
                 <div class="layout column align-center">
-                  <h5>&nbsp;</h5>
+                  <h5>&nbsp</h5>
                   <img src="/logo.png" alt="Libra of Constellation" width="240" height="60">
-                  <!--<h1 class="flex my-4 primary&#45;&#45;text">&nbsp;</h1>-->
-                  <h1>&nbsp;</h1>
+                  <!--<h1 class="flex my-4 primary&#45&#45text">&nbsp</h1>-->
+                  <h1>&nbsp</h1>
                 </div>
                 <v-form>
                   <v-text-field
@@ -29,7 +29,7 @@
                     v-model="account.password"
                     :append-icon="isVisiblePassword ? 'visibility_off' : 'visibility'"
                     @click:append="isVisiblePassword = !isVisiblePassword"
-                    @keyup.enter="login"
+                    @keyup.enter="signIn"
                     :label="$t('account.password')"
                     :data-vv-as="$t('account.password')"
                     v-validate="'required'"
@@ -43,7 +43,7 @@
                   <!--<v-icon color="blue">fa fa-facebook-square fa-lg</v-icon>-->
                 <!--</v-btn>-->
                 <v-spacer></v-spacer>
-                <v-btn block color="primary" @click="login" :loading="loading">{{$t('login.submit')}}</v-btn>
+                <v-btn block color="primary" @click="signIn" :loading="loading">{{$t('login.submit')}}</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -55,6 +55,7 @@
 
 <script>
   import pi from '~pi'
+  import { mapActions } from 'vuex'
   import validator from '~/plugins/validator'
 
   export default {
@@ -86,22 +87,28 @@
     },
 
     methods: {
-      login() {
-        this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN', this)
-
-        this.$validator.validateAll().then((result, a) => {
-          if (result) { // eslint-disable-next-line
+      ...mapActions('user', [
+        'login'
+      ]),
+      signIn() {
+        this.$validator.validateAll().then((result) => {
+          if (result) {
             this.loading = true
-            console.log('From Submitted!');
-            return;
+
+            this.login({account: this.account}).then((response) => {
+              this.loading = false
+              this.$router.push({path: '/'})
+            }).catch(({response: {status, data: {message}}}) => {
+              this.loading = false
+            })
           }
-          console.log('Correct them errors!');
-        });
+        })
       }
     }
 
-  };
+  }
 </script>
+
 <style scoped lang="css">
   #login {
     height: 50%;

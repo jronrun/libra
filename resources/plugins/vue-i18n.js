@@ -1,3 +1,5 @@
+'use strict'
+
 import pi from '~pi'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
@@ -28,12 +30,16 @@ export default ({app, store}) => {
       return
     }
 
-    loadLanguageAsync(localeName).then(() => {
-      store.commit(types.SET_LANG, localeName)
-      app.i18n.locale = store.state.locale
+    if (localeName !== store.state.locale) {
+      loadLanguageAsync(localeName).then(() => {
+        store.commit(types.SET_LANG, localeName)
+        app.i18n.locale = store.state.locale
 
+        changeValidateIfExist(localeName, $validator, validatorDictionary)
+      })
+    } else {
       changeValidateIfExist(localeName, $validator, validatorDictionary)
-    })
+    }
   }
 
   const changeValidateIfExist = (localeName, validator, validatorDictionary = {}) => {

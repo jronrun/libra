@@ -1,13 +1,27 @@
 'use strict'
 
+const lz = use('lz-string')
+const { validate } = use('Validator')
+
+
 class SessionController {
 
-  async login({ request, auth }) {
-    const { email, password } = request.all()
-    let token = await auth.attempt(email, password)
+  async login({ request, response, auth }) {
+    const { username, password } = request.all()
+    let aPassword = lz.decompressFromEncodedURIComponent(password)
 
-    console.log(token)
-    return 'Logged in successfully'
+    let token
+    try {
+      token = await auth.attempt(username, aPassword)
+    } catch (e) {
+      return response.status(401).json({
+        message: 'Username or password is incorrect'
+      })
+    }
+
+    return {
+      token: lz.compressToEncodedURIComponent(JSON.stringify(token))
+    }
   }
 
   async delete ({ auth, response }) {
