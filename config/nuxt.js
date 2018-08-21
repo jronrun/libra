@@ -5,9 +5,13 @@ const resolve = require('path').resolve
 module.exports = {
   build: {
     extend (config, { isClient, isServer, isDev }) {
-      config.resolve.alias['~pi'] = '~/plugins/PI.js'
-      config.resolve.alias['~axios'] = '~/plugins/axios.js'
-      config.resolve.alias['~types'] = '~/store/types.js'
+      // config.resolve.alias['~pi'] = '~/plugins/PI.js'
+      Object.assign(config.resolve.alias, {
+        '~pi': '~/plugins/PI.js',
+        '~helper': '~/plugins/helper.js',
+        '~axios': '~/plugins/axios.js',
+        '~types': '~/store/types.js'
+      })
     },
     // https://github.com/webpack-contrib/webpack-bundle-analyzer
     analyze: {

@@ -3,6 +3,9 @@
     "email": "E-mail",
     "password": "Password"
   },
+  "button": {
+    "close": "Close"
+  },
   "login": {
     "title": "Login - Libra",
     "description": "libra",

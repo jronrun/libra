@@ -3,6 +3,9 @@
     "email": "邮箱",
     "password": "密码"
   },
+  "button": {
+    "close": "关闭"
+  },
   "login": {
     "title": "登录 - 天秤座",
     "description": "天秤座",

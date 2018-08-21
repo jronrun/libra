@@ -45,6 +45,24 @@
                 <v-spacer></v-spacer>
                 <v-btn block color="primary" @click="signIn" :loading="loading">{{$t('login.submit')}}</v-btn>
               </v-card-actions>
+
+              <v-snackbar
+                v-model="notify.visible"
+                color="error"
+                top
+                vertical
+                :timeout="notify.timeout"
+              >
+                {{ notify.text }}
+                <v-btn
+                  dark
+                  flat
+                  @click="notify.visible = false"
+                >
+                  {{$t('button.close')}}
+                </v-btn>
+              </v-snackbar>
+
             </v-card>
           </v-flex>
         </v-layout>
@@ -67,7 +85,12 @@
         password: ''
       },
       isVisiblePassword: false,
-      loading: false
+      loading: false,
+      notify: {
+        visible: false,
+        timeout: 6000,
+        text: ''
+      }
     }),
 
     head() {
@@ -91,14 +114,17 @@
         'login'
       ]),
       signIn() {
+        // this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN', this)
         this.$validator.validateAll().then((result) => {
           if (result) {
             this.loading = true
 
-            this.login({account: this.account}).then((response) => {
+            this.login({account: this.account}).then(response => {
               this.loading = false
               this.$router.push({path: '/'})
-            }).catch(({response: {status, data: {message}}}) => {
+            }).catch(({hint}) => {
+              this.notify.visible = true
+              this.notify.text = hint
               this.loading = false
             })
           }

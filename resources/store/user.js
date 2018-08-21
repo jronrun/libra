@@ -3,6 +3,7 @@
 import pi from '~pi'
 import axios from '~axios'
 import * as types from '~types'
+import {withErrorHint} from "~helper";
 
 export const state = () => ({
   credentials: ''
@@ -45,6 +46,7 @@ export const actions = {
         commit(types.SET_CREDENTIALS, {credentials: `${credentials.type} ${credentials.token}`})
         resolve(response)
       }).catch(error => {
+        withErrorHint(error)
         reject(error)
       })
     })
