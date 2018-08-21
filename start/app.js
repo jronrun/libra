@@ -22,7 +22,8 @@ const providers = [
   '@adonisjs/validator/providers/ValidatorProvider',
   '@adonisjs/mail/providers/MailProvider',
   '@adonisjs/antl/providers/AntlProvider',
-  'adonis-acl/providers/AclProvider'
+  'adonis-acl/providers/AclProvider',
+  '@adonisjs/http-logger/providers/LoggerProvider'
 ]
 
 /*
@@ -68,4 +69,12 @@ const commands = [
   'App/Commands/NuxtBuild'
 ]
 
-module.exports = { providers, aceProviders, aliases, commands }
+module.exports = {
+  providers,
+  aceProviders,
+  aliases,
+  commands,
+  http: {
+    loggerEnv: ['development', 'production']
+  }
+}

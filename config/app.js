@@ -185,7 +185,8 @@ module.exports = {
     */
     console: {
       driver: 'console',
-      name: 'adonis-app',
+      name: 'Libra of Constellation',
+      //json: true,
       level: 'info'
     },
 
@@ -202,8 +203,8 @@ module.exports = {
     */
     file: {
       driver: 'file',
-      name: 'adonis-app',
-      filename: 'adonis.log',
+      name: 'Libra of Constellation',
+      filename: 'libra.log',
       level: 'info'
     }
   }
