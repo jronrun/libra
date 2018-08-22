@@ -5,10 +5,10 @@ const {validate} = use('Validator')
 
 class SessionController {
 
-  async login({request, response, auth}) {
-    const message = 'Username or password is incorrect'
+  async login({request, response, session, auth, locale, antl}) {
+    const message = antl.formatMessage('invalid.credentials')
     const rules = {
-      email: 'required|email',
+      username: 'required|email',
       password: 'required'
     }
 
@@ -28,9 +28,8 @@ class SessionController {
       return response.status(401).json({message})
     }
 
-    return {
-      token: lz.compressToEncodedURIComponent(JSON.stringify(token))
-    }
+    session.put('token', token)
+    return {}
   }
 
   async delete({auth, response}) {

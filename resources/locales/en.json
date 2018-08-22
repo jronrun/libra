@@ -21,5 +21,8 @@
         }
       }
     }
+  },
+  "invalid": {
+    "credentials": "Username or password is incorrect, try again."
   }
 }

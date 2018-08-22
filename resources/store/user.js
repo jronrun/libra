@@ -41,9 +41,6 @@ export const actions = {
         username: account.email.trim(),
         password: pi.sign(account.password.trim())
       }).then(response => {
-        let {data: {token}} = response
-        let credentials = pi.deepUnsign(token)
-        commit(types.SET_CREDENTIALS, {credentials: `${credentials.type} ${credentials.token}`})
         resolve(response)
       }).catch(error => {
         withErrorHint(error)

@@ -26,6 +26,6 @@ new Ignitor(require('@adonisjs/fold'))
     return use('App/Services/Nuxt').build()
   })
   .then(() => {
-    use('Logger').info('Nuxt is ready to handle requests')
+    use('Logger').info('libra of constellation start successfully')
   })
   .catch(console.error)

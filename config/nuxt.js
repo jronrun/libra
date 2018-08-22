@@ -29,14 +29,14 @@ module.exports = {
   },
 
   router: {
-
+    middleware: ['locale']
   },
+
   plugins: [
     // ssr: false to only include it on client-side
     { src: '~plugins/persist.js', ssr: false },
     '~plugins/vuetify.js', '~plugins/vue-i18n.js'
   ],
-  middleware: [],
 
   /*
   ** Headers of the page
