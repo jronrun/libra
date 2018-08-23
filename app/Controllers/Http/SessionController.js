@@ -2,6 +2,8 @@
 
 const lz = use('lz-string')
 const {validate} = use('Validator')
+const status = use('http-status')
+const TOKEN_KEY = 'token'
 
 class SessionController {
 
@@ -15,7 +17,7 @@ class SessionController {
     const params = request.all()
     const validation = await validate(params, rules)
     if (validation.fails()) {
-      return response.status(401).json({message})
+      return response.status(status.UNAUTHORIZED).json({message})
     }
 
     const {username, password} = params
@@ -25,15 +27,15 @@ class SessionController {
     try {
       token = await auth.attempt(username, aPassword)
     } catch (e) {
-      return response.status(401).json({message})
+      return response.status(status.UNAUTHORIZED).json({message})
     }
 
-    session.put('token', token)
+    session.put(TOKEN_KEY, token)
     return {}
   }
 
-  async delete({auth, response}) {
-    await auth.logout()
+  async delete({auth, session, response}) {
+    session.forget(TOKEN_KEY)
     return response.redirect('/')
   }
 }

@@ -23,6 +23,7 @@
     }
   },
   "invalid": {
-    "credentials": "Username or password is incorrect, try again."
+    "credentials": "Username or password is incorrect, try again.",
+    "locale": "The language {locale} is not supported temporarily."
   }
 }

@@ -114,7 +114,7 @@
         'login'
       ]),
       signIn() {
-        // this.$i18n.change(this.isVisiblePassword ? 'en' : 'zh_CN', this)
+
         this.$validator.validateAll().then((result) => {
           if (result) {
             this.loading = true
@@ -129,6 +129,7 @@
             })
           }
         })
+
       }
     }
 

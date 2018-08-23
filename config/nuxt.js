@@ -35,7 +35,9 @@ module.exports = {
   plugins: [
     // ssr: false to only include it on client-side
     { src: '~plugins/persist.js', ssr: false },
-    '~plugins/vuetify.js', '~plugins/vue-i18n.js'
+    '~plugins/vuetify.js',
+    '~plugins/vue-i18n.js',
+    '~plugins/ready.js'
   ],
 
   /*

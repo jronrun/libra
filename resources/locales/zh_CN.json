@@ -23,6 +23,7 @@
     }
   },
   "invalid": {
-    "credentials": "用户名或密码不正确, 请重新输入."
+    "credentials": "用户名或密码不正确, 请重新输入.",
+    "locale": "该语言{locale}暂不支持."
   }
 }

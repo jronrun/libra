@@ -3,7 +3,7 @@
 import pi from '~pi'
 import axios from '~axios'
 import * as types from '~types'
-import {withErrorHint} from "~helper";
+import {withErrorHint} from "~helper"
 
 export const state = () => ({
   credentials: ''

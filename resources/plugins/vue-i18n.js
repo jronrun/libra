@@ -4,8 +4,6 @@ import pi from '~pi'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
-import * as types from '~types'
-
 Vue.use(VueI18n)
 
 export default ({app, store}) => {
@@ -24,18 +22,17 @@ export default ({app, store}) => {
   })
 
   // vee-validate: this.$validator
+  // this.$libra.restore('en', this, () => this.$t('login.messages'))
   app.i18n.change = (localeName, {$validator} = {}, validatorDictionary = {}) => {
-    if (!store.state.locales.includes(localeName)) {
-      console.warn(`There is none defined locale for ${localeName}`)
-      return
-    }
-
     if (localeName !== store.state.locale) {
       loadLanguageAsync(localeName).then(() => {
-        store.commit(types.SET_LANG, localeName)
-        app.i18n.locale = store.state.locale
+        store.dispatch('setLocale', {locale: localeName}).then(() => {
+          app.i18n.locale = store.state.locale
+          changeValidateIfExist(localeName, $validator, validatorDictionary)
+        }).catch((e) => {
+          console.error(e)
+        })
 
-        changeValidateIfExist(localeName, $validator, validatorDictionary)
       })
     } else {
       changeValidateIfExist(localeName, $validator, validatorDictionary)

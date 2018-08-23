@@ -22,7 +22,7 @@ instance.interceptors.response.use((response) => {
   if (isDebugHttp) {
     console.log(
       '>>>', request.method.toUpperCase(), request.url, request.params,
-      '\n   ', response.status, response.data
+      '\n   ', response.status, response.data || ''
     )
   }
   return response
@@ -33,7 +33,7 @@ instance.interceptors.response.use((response) => {
     if (request) {
       console.log(
         '>>>', request.method.toUpperCase(), request.url, request.params,
-        '\n   ', response.status, response.data
+        '\n   ', response.status, response.data || ''
       )
     }
   }

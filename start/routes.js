@@ -16,6 +16,11 @@
 const Route = use('Route')
 
 Route.group(() => {
+  Route.post('locale', 'SettingController.setLocale')
+
+}).prefix('settings')
+
+Route.group(() => {
   Route.post('login', 'SessionController.login')
 
 }).middleware(['guest'])
