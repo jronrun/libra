@@ -231,7 +231,7 @@ class CMAssist {
     })
   }
 
-  langInfo(lang) {
+  static langInfo(lang) {
     return getModeInfo(lang)
   }
 
@@ -362,7 +362,7 @@ class CMAssist {
     if (pi.isUndefined(langName)) {
       let rInfo = {}
 
-      Object.assign(rInfo, this.langInfo(this.attrs('mode') || 'Plain Text'))
+      Object.assign(rInfo, CMAssist.langInfo(this.attrs('mode') || 'Plain Text'))
       Object.assign(rInfo, {
         chosenMimeOrExt: this.attrs(cmeKey) || ''
       })
@@ -370,7 +370,7 @@ class CMAssist {
       return rInfo
     }
 
-    let info = this.langInfo(langName)
+    let info = CMAssist.langInfo(langName)
     if (!info) {
       throw Error('Could not find a mode corresponding to ' + langName)
     }
@@ -400,7 +400,7 @@ class CMAssist {
   }
 
   requireMode(mode, callback) {
-    let aLangInfo = this.langInfo(mode)
+    let aLangInfo = CMAssist.langInfo(mode)
     if (null == aLangInfo) {
       console && console.warn(`requireMode ignored. invalid mode ${mode}`)
       return
