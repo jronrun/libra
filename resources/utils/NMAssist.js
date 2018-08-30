@@ -54,6 +54,29 @@ class NMAssist extends CMAssist {
     this.instance = instanceOfCodeMirror
   }
 
+  static getMirrorOptions(options = {}) {
+    let extraKeys = Object.assign({
+      //http://codemirror.net/doc/manual.html#commands
+      "Ctrl-/": 'toggleComment',
+      "Ctrl-A": 'selectAll'
+    }, options.extraKeys || {})
+
+    return CMAssist.getMirrorOptions(Object.assign({
+      mode: 'markdown',
+      keyMap: 'vim',
+      fullScreen: false,
+      autofocus: true,
+      lineNumbers: true,
+      lineNumberFormatter: (line) => {
+        return 1 === line ? '' : line
+      },
+      showCursorWhenSelecting: true,
+      styleActiveLine: true
+    }, options, {
+      extraKeys: extraKeys
+    }))
+  }
+
   static defineEx(cmd, exHandle, desc = '', shortCmd) {
     return doDefineEx(cmd, exHandle, desc, shortCmd)
   }

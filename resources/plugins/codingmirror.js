@@ -2,7 +2,7 @@
 
 import Vue from 'vue'
 
-import 'codemirror/lib/codemirror'
+import CodeMirror from 'codemirror/lib/codemirror'
 import 'codemirror/lib/codemirror.css'
 
 import 'codemirror/addon/comment/comment'
@@ -65,10 +65,12 @@ import 'codemirror/keymap/sublime'
 import VueCodemirror from 'vue-codemirror'
 Vue.use(VueCodemirror)
 
+global.CodeMirror = CodeMirror
+
 /**
   if (process.browser) {
     const {CMAssist} = require('~/plugins/codingmirror.js')
   }
  */
 import CMAssist from '../utils/CMAssist'
-export {CMAssist}
+export { CMAssist }

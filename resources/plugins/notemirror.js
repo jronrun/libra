@@ -1,6 +1,6 @@
 'use strict'
 
-import {CMAssist} from '~/plugins/codingmirror'
+import { CMAssist } from '~/plugins/codingmirror'
 
 import 'codemirror/addon/display/rulers'
 import 'codemirror/addon/edit/trailingspace'
@@ -17,4 +17,4 @@ import 'codemirror/addon/lint/yaml-lint'
 import 'codemirror/keymap/vim'
 
 import NMAssist from '../utils/NMAssist'
-export {NMAssist, CMAssist}
+export { NMAssist, CMAssist }

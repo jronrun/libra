@@ -44,6 +44,27 @@ class MVAssist {
     this.right = mirrorWrap(this.instance.rightOriginal(), assistEvents, assistOptions)
   }
 
+  /**
+   * panels 2: value orig, panels 3: origLeft value orig
+   * @param options
+   */
+  static getMirrorOptions(options = {}) {
+    return Object.assign({
+      origLeft: undefined,
+      value: '',
+      orig: '',
+
+      connect: null,
+      mode: '',
+      lineNumbers: true,
+      revertButtons: true,
+      showDifferences: true,
+      highlightDifferences: true,
+      collapseIdentical: false,
+      allowEditingOriginals: true
+    }, options)
+  }
+
   is2Panels() {
     return pi.isUndefined(this.instance.options.origLeft)
   }

@@ -187,6 +187,37 @@ class CMAssist {
     }
   }
 
+  static getMirrorOptions(options = {}) {
+    let extraKeys = Object.assign({
+      //http://codemirror.net/doc/manual.html#commands
+      'Ctrl-K': 'toMatchingTag',
+      'Ctrl-J': 'autocomplete',
+      'Ctrl-Q': 'toggleFold'
+    }, options.options.extraKeys || {})
+
+    return Object.assign({
+      autofocus: false,
+      lineNumbers: false,
+      matchBrackets: true,
+      theme: 'lemon',
+      styleActiveLine: false,
+      readOnly: false,
+      mode: 'text/x-markdown',
+      autoCloseBrackets: true,
+      autoCloseTags: true,
+      lineWrapping: true,
+      foldGutter: true,
+      content: '',
+      scrollbarStyle: 'null', //native
+      gutters: [],
+      matchTags: {
+        bothTags: true
+      }
+    }, options, {
+      extraKeys: extraKeys
+    })
+  }
+
   langInfo(lang) {
     return getModeInfo(lang)
   }
