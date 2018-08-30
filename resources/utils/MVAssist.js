@@ -1,5 +1,6 @@
 'use strict'
 
+import pi from '~pi'
 import CMAssist from '../utils/CMAssist'
 
 let mirrorWrap = (instanceOfCodemirror, assistEvents, assistOptions) => {

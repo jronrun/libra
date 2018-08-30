@@ -68,8 +68,9 @@ Vue.use(VueCodemirror)
 global.CodeMirror = CodeMirror
 
 /**
+  let CMAssist
   if (process.browser) {
-    const {CMAssist} = require('~/plugins/codingmirror.js')
+    ({CMAssist} = require('~/plugins/codingmirror'))
   }
 
    <no-ssr placeholder="Codemirror Loading...">

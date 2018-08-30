@@ -1,5 +1,7 @@
 'use strict'
 
+import pi from '~pi'
+
 const modes = {}
 const languages = {}
 const loadedTheme = ['default', 'lemon']
