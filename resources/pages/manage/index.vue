@@ -13,10 +13,9 @@
 </template>
 
 <script>
+  let NMAssist
   if (process.browser) {
-    const {NMAssist, CMAssist} = require('~/plugins/notemirror.js')
-    console.log(NMAssist)
-    console.log(CMAssist)
+    ({NMAssist} = require('~/plugins/notemirror'))
   }
 
   export default {
@@ -64,32 +63,18 @@
 </style>`
       return {
         code,
-        cmOption: {
-          tabSize: 4,
-          foldGutter: true,
-          styleActiveLine: true,
-          lineNumbers: true,
-          line: true,
-          keyMap: "sublime",
-          mode: 'text/x-vue',
-          theme: 'base16-dark',
-          extraKeys: {
-            'F11'(cm) {
-              cm.setOption("fullScreen", !cm.getOption("fullScreen"))
-            },
-            'Esc'(cm) {
-              if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false)
-            }
-          }
-        }
+        cmOption: null
       }
+    },
+    beforeMount() {
+      this.cmOption = NMAssist.getMirrorOptions()
     },
     methods: {
       onCmCursorActivity(codemirror) {
         console.log('onCmCursorActivity', codemirror)
       },
       onCmReady(codemirror) {
-        console.log('onCmReady', codemirror)
+        global.inst = new NMAssist(codemirror)
       },
       onCmFocus(codemirror) {
         console.log('onCmFocus', codemirror)

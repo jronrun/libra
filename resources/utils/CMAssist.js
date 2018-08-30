@@ -195,7 +195,7 @@ class CMAssist {
       'Ctrl-K': 'toMatchingTag',
       'Ctrl-J': 'autocomplete',
       'Ctrl-Q': 'toggleFold'
-    }, options.options.extraKeys || {})
+    }, options.extraKeys || {})
 
     return Object.assign({
       autofocus: false,

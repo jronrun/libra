@@ -82,6 +82,23 @@ global.CodeMirror = CodeMirror
          @blur="onMirrorBlur">
      </codemirror>
    </no-ssr>
+
+   export default {
+      data() {
+        return {
+          instance: null,
+          mirrorOptions: null
+        }
+      },
+      beforeMount() {
+        this.mirrorOptions = CMAssist.getMirrorOptions()
+      },
+      methods: {
+        onMirrorReady(cm) {
+          this.instance = new CMAssist(cm)
+        }
+      }
+    }
  */
 import CMAssist from '../utils/CMAssist'
 export { CMAssist }
