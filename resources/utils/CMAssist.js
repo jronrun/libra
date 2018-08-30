@@ -110,6 +110,9 @@ const predefineKeyActions = {
   'Ctrl-L':'guttersTgl'
 }
 
+let mirrorBasePath = ''
+let thirdThemePath = ''
+
 class CMAssist {
 
   /*
@@ -125,8 +128,8 @@ class CMAssist {
     this.commands = []
 
     this.assistOptions = Object.assign({
-      basePath: '',
-      thirdThemePath: ''
+      basePath: mirrorBasePath,
+      thirdThemePath: thirdThemePath
     }, assistOptions)
 
     this.events = Object.assign({
@@ -187,6 +190,14 @@ class CMAssist {
       Object.assign(this, commandM)
       this.commands.push(k)
     }
+  }
+
+  static setMirrorBase({theMirrorBasePath, theThirdThemePath} = {
+    theMirrorBasePath: '',
+    theThirdThemePath: ''
+  }) {
+    mirrorBasePath = theMirrorBasePath
+    thirdThemePath = theThirdThemePath
   }
 
   static getMirrorOptions(options = {}) {

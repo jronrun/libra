@@ -1,6 +1,3 @@
-@require './vendor/material-icons'
-@require '~vuetify/src/stylus/main'
-
 .cm-s-lemon .CodeMirror { background-color:#ffffff; color:#2e383c; line-height:1.4375; }
 .cm-s-lemon .cm-comment {color:silver}
 .cm-s-lemon .cm-keyword, .cm-s-lemon .cm-property {color:gray}
@@ -14,4 +11,3 @@
 .cm-s-lemon .CodeMirror-linenumber { padding:0; color:#e0e2e5; }
 .cm-s-lemon .CodeMirror-guttermarker { color: #1d75b3; }
 .cm-s-lemon .CodeMirror-guttermarker-subtle { color: #e0e2e5; }
-
