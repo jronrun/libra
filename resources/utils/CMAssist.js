@@ -68,26 +68,12 @@ let getModeInfo = (lang = '') => {
     info = CodeMirror.findModeByMIME(lang)
     info.mime = lang
   }
-  if (info) {
-    return info
-  }
 
-  info = CodeMirror.findModeByFileName(lang)
-  if (info) {
-    return info
-  }
-
-  info = CodeMirror.findModeByName(lang)
-  if (info) {
-    return info
-  }
-
-  info = CodeMirror.findModeByExtension(lang)
-  if (info) {
-    return info
-  }
-
-  return null
+  return info
+    || CodeMirror.findModeByFileName(lang)
+    || CodeMirror.findModeByName(lang)
+    || CodeMirror.findModeByExtension(lang)
+    || null
 }
 
 let loadModeReady = (modeBasePath, callback) => {
