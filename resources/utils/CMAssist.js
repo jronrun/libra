@@ -123,7 +123,7 @@ class CMAssist {
     this.commands = []
 
     this.assistOptions = Object.assign({
-      basePath: global.config.mirror.basePath,
+      basePath: '',
       thirdThemePath: ''
     }, assistOptions)
 
