@@ -71,6 +71,16 @@ global.CodeMirror = CodeMirror
   if (process.browser) {
     const {CMAssist} = require('~/plugins/codingmirror.js')
   }
+
+   <no-ssr placeholder="Codemirror Loading...">
+     <codemirror v-model="code"
+         :options="mirrorOptions"
+         @cursorActivity="onMirrorCursorActivity"
+         @ready="onMirrorReady"
+         @focus="onMirrorFocus"
+         @blur="onMirrorBlur">
+     </codemirror>
+   </no-ssr>
  */
 import CMAssist from '../utils/CMAssist'
 export { CMAssist }
