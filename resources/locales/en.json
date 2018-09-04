@@ -1,4 +1,7 @@
 {
+  "libra": {
+    "title": "Libra of Constellation"
+  },
   "account": {
     "email": "E-mail",
     "password": "Password"

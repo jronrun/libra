@@ -1,4 +1,7 @@
 {
+  "libra": {
+    "title": "天秤座"
+  },
   "account": {
     "email": "邮箱",
     "password": "密码"

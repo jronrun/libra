@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire" class="app">
+  <v-app id="libra" class="app">
     <app-drawer></app-drawer>
     <app-toolbar></app-toolbar>
     <v-content>
@@ -7,13 +7,14 @@
         <nuxt/>
       </div>
 
-      <!-- App Footer -->
       <v-footer height="auto" class="white pa-3" absolute>
-        <span class="caption">Libra of Constellation &copy; {{ new Date().getFullYear() }}</span>
+        <span class="caption">{{$t('libra.title')}} &copy {{ new Date().getFullYear() }}</span>
         <v-spacer></v-spacer>
         <img src="/logo.png" height="25"/>
       </v-footer>
+
     </v-content>
+
     <!-- Go to top -->
     <app-fab></app-fab>
 
@@ -25,7 +26,7 @@
       class="setting-drawer"
       temporary
       right
-      v-model="rightDrawer"
+      v-model="themeSettingDrawer"
       hide-overlay
       fixed
     >
@@ -33,11 +34,12 @@
     </v-navigation-drawer>
   </v-app>
 </template>
+
 <script>
-  import AppDrawer from '@/components/AppDrawer';
-  import AppToolbar from '@/components/AppToolbar';
-  import ThemeSettings from '@/components/ThemeSettings';
-  import AppFab from '@/components/AppFab';
+  import AppToolbar from '@/components/AppToolbar'
+  import ThemeSettings from '@/components/ThemeSettings'
+  import AppFab from '@/components/AppFab'
+  import AppDrawer from '@/components/AppDrawer'
 
   export default {
     components: {
@@ -48,7 +50,7 @@
     },
     data: () => ({
       expanded: true,
-      rightDrawer: false,
+      themeSettingDrawer: false,
       snackbar: {
         show: false,
         text: '',
@@ -61,26 +63,26 @@
     },
 
     created () {
-      global.getApp = this;
+      global.getApp = this
     },
     methods: {
       openThemeSettings () {
-        this.$vuetify.goTo(0);
-        this.rightDrawer = (!this.rightDrawer);
+        this.$vuetify.goTo(0)
+        this.themeSettingDrawer = (!this.themeSettingDrawer)
       }
     },
 
-  };
+  }
 </script>
 
 
 <style lang="stylus" scoped>
   .page-wrapper
-    min-height:calc(100vh - 64px - 50px - 81px );
+    min-height: calc(100vh - 64px - 50px - 81px);
 
   .setting-fab
-    top:50%!important;
-    right:0;
-    border-radius:0
+    top: 50% !important;
+    right: 0;
+    border-radius: 0;
 
 </style>

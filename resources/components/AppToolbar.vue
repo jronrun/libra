@@ -1,15 +1,12 @@
 <template>
-  <v-toolbar
-    color="primary"
-    fixed
-    dark
-    app
-  >
+  <v-toolbar color="primary" fixed dark app>
     <v-toolbar-side-icon @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
+
     <v-spacer></v-spacer>
     <v-btn icon @click="handleFullScreen()">
       <v-icon>fullscreen</v-icon>
     </v-btn>
+
     <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
       <v-btn icon flat slot="activator">
         <v-badge color="red" overlap>
@@ -20,12 +17,14 @@
       <notification-list>
       </notification-list>
     </v-menu>
+
     <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
       <v-btn icon large flat slot="activator">
         <v-avatar size="30px">
           <v-icon medium>person</v-icon>
         </v-avatar>
       </v-btn>
+
       <v-list class="pa-0">
         <v-list-tile v-for="(item,index) in items" :to="!item.href ? { name: item.name } : null" :href="item.href"
                      @click="item.click" ripple="ripple" :disabled="item.disabled" :target="item.target" rel="noopener"
@@ -38,25 +37,14 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
+
     </v-menu>
   </v-toolbar>
 </template>
+
 <script>
-  import NotificationList from '@/components/widgets/list/NotificationList';
-  const toggleFullScreen = () => {
-    let doc = global.document;
-    let docEl = doc.documentElement;
-
-    let requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-    let cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
-
-    if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-      requestFullScreen.call(docEl);
-    }
-    else {
-      cancelFullScreen.call(doc);
-    }
-  };
+  import pi from '~pi'
+  import NotificationList from '@/components/widgets/list/NotificationList'
 
   export default {
     name: 'app-toolbar',
@@ -70,7 +58,7 @@
           href: '#',
           title: 'Profile',
           click: (e) => {
-            console.log(e);
+            console.log(e)
           }
         },
         {
@@ -78,7 +66,7 @@
           href: '#',
           title: 'Settings',
           click: (e) => {
-            console.log(e);
+            console.log(e)
           }
         },
         {
@@ -86,23 +74,23 @@
           href: '#',
           title: 'Logout',
           click: (e) => {
-            window.getApp.$emit('APP_LOGOUT');
+            global.getApp.$emit('APP_LOGOUT')
           }
         }
       ],
     }),
     computed: {
       toolbarColor() {
-        return this.$vuetify.options.extra.mainNav;
+        return this.$vuetify.options.extra.mainNav
       }
     },
     methods: {
       handleDrawerToggle() {
-        window.getApp.$emit('APP_DRAWER_TOGGLED');
+        global.getApp.$emit('APP_DRAWER_TOGGLED')
       },
       handleFullScreen() {
-        toggleFullScreen();
+        pi.toggleFullScreen()
       }
     }
-  };
+  }
 </script>
