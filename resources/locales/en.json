@@ -2,6 +2,13 @@
   "libra": {
     "title": "Libra of Constellation"
   },
+  "manage": {
+    "settings": {
+      "theme": "Theme Settings",
+      "color": "Color Option",
+      "sidebar": "Sidebar Option"
+    }
+  },
   "account": {
     "email": "E-mail",
     "password": "Password"

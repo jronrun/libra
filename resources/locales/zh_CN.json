@@ -2,6 +2,13 @@
   "libra": {
     "title": "天秤座"
   },
+  "manage": {
+    "settings": {
+      "theme": "主题设置",
+      "color": "颜色",
+      "sidebar": "菜单"
+    }
+  },
   "account": {
     "email": "邮箱",
     "password": "密码"
