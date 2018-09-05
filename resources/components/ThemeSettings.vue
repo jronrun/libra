@@ -51,7 +51,6 @@
 </template>
 
 <script>
-
   const defaultColor = 'indigo'
   const defaultDark = 'light'
 
@@ -146,6 +145,7 @@
     methods: {},
 
     mounted() {
+      this.$libra.restoreTheme(this)
     },
 
     watch: {

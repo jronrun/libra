@@ -24,6 +24,9 @@ Libra.install = function (Vue, options) {
       thisOfComponent.$i18n.change(data.locale, thisOfComponent, validatorDictionary)
     },
 
+    restoreTheme: (thisOfComponent, delay = 500) => {
+      pi.delay(() => core.theme(thisOfComponent, pi.store(LIBRA_KEY).theme), delay)
+    },
     theme: (thisOfComponent, {color, dark} = {color: undefined, dark: undefined}) => {
       let update = {}
       let hasValue = false
