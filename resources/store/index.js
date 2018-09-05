@@ -7,6 +7,16 @@ import {withErrorHint} from "~helper"
 // const Request = process.server ? use('Adonis/Src/Request') : undefined
 
 export const state = () => ({
+  locales: [
+    {
+      name: 'English',
+      value: 'en'
+    },
+    {
+      name: '简体中文',
+      value: 'zh_CN'
+    }
+  ],
   locale: 'en'
 })
 

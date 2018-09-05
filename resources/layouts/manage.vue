@@ -58,12 +58,19 @@
       }
     }),
 
+    beforeMount() {
+      this.$libra.restore(this)
+    },
+
     computed: {
 
     },
 
     created () {
       global.getApp = this
+      global.getApp.$on('APP_THEME_SETTINGS', () => {
+        this.openThemeSettings()
+      })
     },
     methods: {
       openThemeSettings () {

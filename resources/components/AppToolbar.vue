@@ -7,6 +7,29 @@
       <v-icon>fullscreen</v-icon>
     </v-btn>
 
+    <v-btn icon @click="handleThemeSettings()">
+      <v-icon>color_lens</v-icon>
+    </v-btn>
+
+    <v-menu offset-y>
+      <v-btn icon dark slot="activator">
+        <v-tooltip bottom>
+          <v-icon dark slot="activator">language</v-icon>
+          <span>{{$t("libra.language")}}</span>
+        </v-tooltip>
+      </v-btn>
+      <v-list>
+        <v-list-tile
+          v-for="lang in locales"
+          :key="lang.value"
+          @mouseover.native="handleLocale(lang.value, true)"
+          @click="handleLocale(lang.value)"
+        >
+          <v-list-tile-title>{{lang.name}}</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
+
     <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
       <v-btn icon flat slot="activator">
         <v-badge color="red" overlap>
@@ -52,6 +75,7 @@
       NotificationList
     },
     data: () => ({
+      locales: [],
       items: [
         {
           icon: 'account_circle',
@@ -79,6 +103,9 @@
         }
       ],
     }),
+    created() {
+      this.locales = this.$store.state.locales
+    },
     computed: {
       toolbarColor() {
         return this.$vuetify.options.extra.mainNav
@@ -90,6 +117,12 @@
       },
       handleFullScreen() {
         pi.toggleFullScreen()
+      },
+      handleLocale(aLocale) {
+        this.$i18n.change(aLocale)
+      },
+      handleThemeSettings() {
+        global.getApp.$emit('APP_THEME_SETTINGS')
       }
     }
   }
