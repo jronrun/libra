@@ -51,14 +51,17 @@
 </template>
 
 <script>
-  import colors from 'vuetify/es5/util/colors'
+
+  const defaultColor = 'indigo'
+  const defaultDark = 'light'
 
   export default {
     data() {
       return {
-        themeColor: 'indigo',
-        sideBarOption: 'light',
-        colors: colors
+        themeColor: defaultColor,
+        sideBarOption: defaultDark,
+        setDefaultColorCount: 0,
+        setDefaultDarkCount: 0
       }
     },
     computed: {
@@ -140,16 +143,35 @@
       }
     },
 
+    methods: {},
+
+    mounted() {
+    },
+
     watch: {
       themeColor: {
         handler(val) {
-          this.$vuetify.theme.primary = this.colors[val].base
+          let isDefaultColor = val === defaultColor
+          if (isDefaultColor) {
+            this.setDefaultColorCount++
+          }
+
+          if (!isDefaultColor || this.setDefaultColorCount > 1) {
+            this.$libra.theme(this, {color: val})
+          }
         },
         immediate: true
       },
       sideBarOption: {
         handler(val) {
-          this.$vuetify.dark = (val === 'dark')
+          let isDefaultDark = val === defaultDark
+          if (isDefaultDark) {
+            this.setDefaultDarkCount++
+          }
+
+          if (!isDefaultDark || this.setDefaultDarkCount > 1) {
+            this.$libra.theme(this, {dark: val})
+          }
         },
         immediate: true
       }

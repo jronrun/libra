@@ -36,16 +36,16 @@
     },
     methods: {
       onCmCursorActivity(codemirror) {
-        console.log('onCmCursorActivity', codemirror)
+        // console.log('onCmCursorActivity', codemirror)
       },
       onCmReady(codemirror) {
         global.inst = new NMAssist(codemirror)
       },
       onCmFocus(codemirror) {
-        console.log('onCmFocus', codemirror)
+        // console.log('onCmFocus', codemirror)
       },
       onCmBlur(codemirror) {
-        console.log('onCmBlur', codemirror)
+        // console.log('onCmBlur', codemirror)
       }
     }
   }

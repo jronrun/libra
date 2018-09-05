@@ -2,13 +2,21 @@
 
 import pi from '~pi'
 import * as types from '~types'
-import {libra_key} from '~/plugins/libra'
+import {LIBRA_KEY} from '~constants'
 
 export default ({app, store}) => {
 
   store.subscribe(({type, payload}) => {
-    if (type === types.SET_LANG) {
-      pi.store(libra_key, {locale: payload})
+    switch (type) {
+      case types.SET_LANG:
+        pi.store(LIBRA_KEY, {locale: payload})
+        break
+      case types.SET_THEME:
+        const original = pi.store(LIBRA_KEY)
+        pi.store(LIBRA_KEY, {
+          theme: Object.assign({}, original.theme || {}, payload)
+        })
+        break
     }
   })
 

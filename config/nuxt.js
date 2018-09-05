@@ -10,7 +10,8 @@ module.exports = {
         '~pi': '~/plugins/PI.js',
         '~helper': '~/plugins/helper.js',
         '~axios': '~/plugins/axios.js',
-        '~types': '~/store/types.js'
+        '~types': '~/store/types.js',
+        '~constants': '~/utils/constants.js'
       })
     },
     // https://github.com/webpack-contrib/webpack-bundle-analyzer

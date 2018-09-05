@@ -1,5 +1,6 @@
 'use strict'
 
+import pi from '~pi'
 import axios from '~axios'
 import * as types from '~types'
 import {withErrorHint} from "~helper"
@@ -17,12 +18,17 @@ export const state = () => ({
       value: 'zh_CN'
     }
   ],
-  locale: 'en'
+  locale: 'en',
+  theme: { /* color, dark */ }
 })
 
 export const mutations = {
   [types.SET_LANG](state, locale) {
     state.locale = locale
+  },
+
+  [types.SET_THEME](state, payload) {
+    state.theme = Object.assign({}, state.theme, payload)
   }
 }
 

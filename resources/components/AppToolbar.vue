@@ -22,7 +22,6 @@
         <v-list-tile
           v-for="lang in locales"
           :key="lang.value"
-          @mouseover.native="handleLocale(lang.value, true)"
           @click="handleLocale(lang.value)"
         >
           <v-list-tile-title>{{lang.name}}</v-list-tile-title>

@@ -2,7 +2,7 @@
 
 import Vue from 'vue'
 import extend from '../utils/extend-vue-app'
-import Libra, {libra_key} from '~/plugins/libra'
+import Libra from '~/plugins/libra'
 
 Vue.use(Libra)
 

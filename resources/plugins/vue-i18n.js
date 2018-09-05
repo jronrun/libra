@@ -24,6 +24,7 @@ export default ({app, store}) => {
   // vee-validate: this.$validator
   // this.$libra.restore('en', this, () => this.$t('login.messages'))
   app.i18n.change = (localeName, {$validator} = {}, validatorDictionary = {}) => {
+    localeName = localeName || store.state.locale
     if (localeName !== store.state.locale) {
       loadLanguageAsync(localeName).then(() => {
         store.dispatch('setLocale', {locale: localeName}).then(() => {
