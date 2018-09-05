@@ -25,7 +25,13 @@ Libra.install = function (Vue, options) {
     },
 
     restoreTheme: (thisOfComponent, delay = 500) => {
-      pi.delay(() => core.theme(thisOfComponent, pi.store(LIBRA_KEY).theme), delay)
+      return new Promise((resolve, reject) => {
+        const theme = pi.store(LIBRA_KEY).theme
+        pi.delay((theTheme) => {
+          core.theme(thisOfComponent, theTheme)
+          resolve(theTheme)
+        }, delay, theme)
+      })
     },
     theme: (thisOfComponent, {color, dark} = {color: undefined, dark: undefined}) => {
       let update = {}

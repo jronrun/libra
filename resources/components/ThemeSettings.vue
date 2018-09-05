@@ -145,7 +145,10 @@
     methods: {},
 
     mounted() {
-      this.$libra.restoreTheme(this)
+      const theme = this.$libra.restoreTheme(this).then((theme) => {
+        this.themeColor = theme.color
+        this.sideBarOption = theme.dark
+      })
     },
 
     watch: {
