@@ -6,7 +6,9 @@
     "settings": {
       "theme": "主题设置",
       "color": "颜色",
-      "sidebar": "菜单"
+      "sidebar": "菜单",
+      "light": "亮色",
+      "dark": "暗色"
     }
   },
   "account": {

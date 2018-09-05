@@ -35,10 +35,10 @@
             <div class="my-3">
               <v-btn-toggle v-model="sideBarOption">
                 <v-btn flat value="dark">
-                  Dark
+                  {{$t('manage.settings.dark')}}
                 </v-btn>
                 <v-btn flat value="light">
-                  Light
+                  {{$t('manage.settings.light')}}
                 </v-btn>
               </v-btn-toggle>
             </div>
@@ -70,14 +70,6 @@
               sideNav: 'blue',
               mainNav: 'blue',
               sideManu: 'white'
-            }
-          },
-          {
-            key: 'lightBlue',
-            value: {
-              sideNav: 'blue',
-              mainNav: 'white',
-              sideManu: 'blue lighten-1'
             }
           },
           {

@@ -6,7 +6,9 @@
     "settings": {
       "theme": "Theme Settings",
       "color": "Color Option",
-      "sidebar": "Sidebar Option"
+      "sidebar": "Sidebar Option",
+      "light": "Light",
+      "dark": "Dark"
     }
   },
   "account": {
