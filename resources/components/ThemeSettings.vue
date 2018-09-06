@@ -75,6 +75,14 @@
             }
           },
           {
+            key: 'cyan',
+            value: {
+              sideNav: 'cyan',
+              mainNav: 'cyan',
+              sideManu: 'white'
+            }
+          },
+          {
             key: 'teal',
             value: {
               sideNav: 'teal',
@@ -135,6 +143,54 @@
             value: {
               sideNav: 'green',
               mainNav: 'green',
+              sideManu: 'white'
+            }
+          },
+          {
+            key: 'lime',
+            value: {
+              sideNav: 'lime',
+              mainNav: 'lime',
+              sideManu: 'white'
+            }
+          },
+          {
+            key: 'yellow',
+            value: {
+              sideNav: 'yellow',
+              mainNav: 'yellow',
+              sideManu: 'white'
+            }
+          },
+          {
+            key: 'amber',
+            value: {
+              sideNav: 'amber',
+              mainNav: 'amber',
+              sideManu: 'white'
+            }
+          },
+          {
+            key: 'brown',
+            value: {
+              sideNav: 'brown',
+              mainNav: 'brown',
+              sideManu: 'white'
+            }
+          },
+          {
+            key: 'blueGrey',
+            value: {
+              sideNav: 'blueGrey',
+              mainNav: 'blueGrey',
+              sideManu: 'white'
+            }
+          },
+          {
+            key: 'grey',
+            value: {
+              sideNav: 'grey',
+              mainNav: 'grey',
               sideManu: 'white'
             }
           }

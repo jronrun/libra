@@ -15,7 +15,7 @@
     "lint": "standard && eslint --ext .js,.vue resources/"
   },
   "dependencies": {
-    "@adonisjs/ace": "^5.0.4",
+    "@adonisjs/ace": "^5.0.5",
     "@adonisjs/antl": "^2.0.6",
     "@adonisjs/auth": "^3.0.6",
     "@adonisjs/bodyparser": "^2.0.4",
@@ -33,8 +33,8 @@
     "axios": "^0.18.0",
     "codemirror": "^5.40.0",
     "cross-env": "^5.2.0",
-    "diff-match-patch": "^1.0.3",
-    "htmlhint": "^0.10.0",
+    "diff-match-patch": "^1.0.4",
+    "htmlhint": "^0.10.1",
     "http-status": "^1.2.0",
     "lz-string": "^1.4.4",
     "nuxt": "^1.4.2",
@@ -44,7 +44,7 @@
     "vue-codemirror": "^4.0.5",
     "vue-i18n": "^8.1.0",
     "vue-perfect-scrollbar": "https://github.com/Degfy/vue-perfect-scrollbar/archive/1.0.0-rc1.tar.gz",
-    "vuetify": "^1.2.1",
+    "vuetify": "^1.2.3",
     "youch": "^2.0.9"
   },
   "standard": {
