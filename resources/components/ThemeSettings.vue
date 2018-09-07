@@ -6,17 +6,18 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <v-container>
-      <v-layout column>
-        <v-flex>
-          <v-subheader class="px-1 my-2">
-            {{$t('manage.settings.color')}}
-          </v-subheader>
-          <div class="color-option">
-            <v-layout wrap>
-              <label class="color-option--label flex xs6 pa-1" v-for="(option,index) in themeColorOptions" :key="index">
-                <input type="radio" name="color" v-bind:value="option.key" v-model="themeColor">
-                <span class="color-option--item bg">
+    <v-card width="100%" height="100%" :dark="$vuetify.dark">
+      <v-container>
+        <v-layout column>
+          <v-flex>
+            <v-subheader class="px-1 my-2">
+              {{$t('manage.settings.color')}}
+            </v-subheader>
+            <div class="color-option">
+              <v-layout wrap>
+                <label class="color-option--label flex xs6 pa-1" v-for="(option,index) in themeColorOptions" :key="index">
+                  <input type="radio" name="color" v-bind:value="option.key" v-model="themeColor">
+                  <span class="color-option--item bg">
                 <span class="overlay">
                   <span class="material-icons">check</span>
                 </span>
@@ -24,28 +25,29 @@
                 <span class="color-option--item--header mainNav" :class="option.value.mainNav"></span>
                 <span class="sideMenu" :class="option.value.sideManu"></span>
               </span>
-              </label>
-            </v-layout>
-          </div>
-          <div class="theme-options">
-            <v-subheader class="px-1 my-2">
-              {{$t('manage.settings.sidebar')}}
-            </v-subheader>
-            <v-divider></v-divider>
-            <div class="my-3">
-              <v-btn-toggle v-model="sideBarOption">
-                <v-btn flat value="dark">
-                  {{$t('manage.settings.dark')}}
-                </v-btn>
-                <v-btn flat value="light">
-                  {{$t('manage.settings.light')}}
-                </v-btn>
-              </v-btn-toggle>
+                </label>
+              </v-layout>
             </div>
-          </div>
-        </v-flex>
-      </v-layout>
-    </v-container>
+            <div class="theme-options">
+              <v-subheader class="px-1 my-2">
+                {{$t('manage.settings.sidebar')}}
+              </v-subheader>
+              <v-divider></v-divider>
+              <div class="my-3">
+                <v-btn-toggle v-model="sideBarOption">
+                  <v-btn flat value="dark">
+                    {{$t('manage.settings.dark')}}
+                  </v-btn>
+                  <v-btn flat value="light">
+                    {{$t('manage.settings.light')}}
+                  </v-btn>
+                </v-btn-toggle>
+              </div>
+            </div>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card>
 
   </div>
 </template>
