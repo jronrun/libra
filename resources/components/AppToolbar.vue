@@ -1,13 +1,13 @@
 <template>
-  <v-toolbar color="primary" fixed dark app>
-    <v-toolbar-side-icon @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
+  <v-toolbar color="primary" fixed :dark="$vuetify.dark" app>
+    <v-toolbar-side-icon dark @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
 
     <v-spacer></v-spacer>
-    <v-btn icon @click="handleFullScreen()">
+    <v-btn icon dark @click="handleFullScreen()">
       <v-icon>fullscreen</v-icon>
     </v-btn>
 
-    <v-btn icon @click="handleThemeSettings()">
+    <v-btn icon dark @click="handleThemeSettings()">
       <v-icon>color_lens</v-icon>
     </v-btn>
 
@@ -30,7 +30,7 @@
     </v-menu>
 
     <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
-      <v-btn icon flat slot="activator">
+      <v-btn icon dark flat slot="activator">
         <v-badge color="red" overlap>
           <span slot="badge">3</span>
           <v-icon medium>notifications</v-icon>
@@ -41,7 +41,7 @@
     </v-menu>
 
     <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
-      <v-btn icon large flat slot="activator">
+      <v-btn icon dark large flat slot="activator">
         <v-avatar size="30px">
           <v-icon medium>person</v-icon>
         </v-avatar>
