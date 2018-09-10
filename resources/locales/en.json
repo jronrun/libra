@@ -1,8 +1,11 @@
 {
   "libra": {
     "title": "Libra of Constellation",
-    "language": "Language"
+    "language": "Language",
+    "fullscreen": "Full screen",
+    "theme": "Theme"
   },
+  "loading": "loading ..",
   "manage": {
     "settings": {
       "theme": "Theme Settings",

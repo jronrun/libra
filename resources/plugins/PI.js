@@ -196,10 +196,18 @@ core.toggleFullScreen = () => {
     || docEl.webkitRequestFullScreen
     || docEl.msRequestFullscreen
 
+  if (!requestFullScreen) {
+    return
+  }
+
   let cancelFullScreen = doc.exitFullscreen
     || doc.mozCancelFullScreen
     || doc.webkitExitFullscreen
     || doc.msExitFullscreen
+
+  if (!cancelFullScreen) {
+    return
+  }
 
   if (!doc.fullscreenElement
     && !doc.mozFullScreenElement

@@ -1,8 +1,11 @@
 {
   "libra": {
     "title": "天秤座",
-    "language": "语言"
+    "language": "语言",
+    "fullscreen": "全屏",
+    "theme": "主题"
   },
+  "loading": "玩命加载中 ..",
   "manage": {
     "settings": {
       "theme": "主题设置",

@@ -22,6 +22,12 @@ export const state = () => ({
   theme: { /* color, dark */ }
 })
 
+export const getters = {
+
+  locale: (state) => state.locales.filter(lang => state.locale === lang.value)[0]
+
+}
+
 export const mutations = {
   [types.SET_LANG](state, locale) {
     state.locale = locale
