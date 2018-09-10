@@ -73,6 +73,8 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    // $ npm install material-design-icons-iconfont -D
+    'material-design-icons-iconfont/dist/material-design-icons.css',
     { src: '~assets/css/app.styl', lang: 'styl' },
     '~assets/css/main.css'
   ],

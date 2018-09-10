@@ -13,6 +13,7 @@
 </template>
 
 <script>
+  import '~/static/mirror/theme/lemon.css'
   let NMAssist
   if (process.browser) {
     ({NMAssist} = require('~/plugins/notemirror'))
