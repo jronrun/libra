@@ -1,7 +1,7 @@
 <template>
   <v-app id="athena">
 
-    <v-navigation-drawer fixed app v-model="drawer" :dark="$vuetify.dark">
+    <v-navigation-drawer fixed app v-model="drawer" :dark="$vuetify.dark" ref="drawer">
       <v-img :aspect-ratio="16/9" src="/bg/34.jpg">
         <v-layout pa-2 column fill-height class="lightbox white--text">
           <v-spacer></v-spacer>
@@ -32,7 +32,7 @@
 
     <v-content>
       <v-container fill-height :style="style.container">
-        <v-layout wrap :style="style.layout">
+        <v-layout wrap :style="style.layout" v-resize="onResize" ref="layout">
           <no-ssr>
             <codemirror v-model="code" :options="mirrorOptions" @ready="onMirrorReady">
             </codemirror>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+  import pi from '~pi'
   import ThemeSettings from '@/components/ThemeSettings'
   import SettingsFab from '~/components/widgets/SettingsFab'
   import '~/static/mirror/theme/lemon.css'
@@ -82,14 +83,14 @@
       drawer: false,
       themeSettingDrawer: false,
       items: [
-        { icon: 'inbox', title: 'Inbox' },
-        { icon: 'star', title: 'Starred' },
-        { icon: 'send', title: 'Sent mail' },
-        { icon: 'drafts', title: 'Drafts' },
-        { divider: true },
-        { icon: 'mail', title: 'All mail' },
-        { icon: 'delete', title: 'Trash' },
-        { icon: 'error', title: 'Spam' }
+        {icon: 'inbox', title: 'Inbox'},
+        {icon: 'star', title: 'Starred'},
+        {icon: 'send', title: 'Sent mail'},
+        {icon: 'drafts', title: 'Drafts'},
+        {divider: true},
+        {icon: 'mail', title: 'All mail'},
+        {icon: 'delete', title: 'Trash'},
+        {icon: 'error', title: 'Spam'}
       ]
     }),
 
@@ -102,7 +103,7 @@
       this.$libra.restoreTheme(this)
     },
 
-    created () {
+    created() {
       global.getApp = this
       global.getApp.$on('APP_THEME_SETTINGS', () => {
         this.openThemeSettings()
@@ -110,24 +111,44 @@
     },
 
     methods: {
-      openThemeSettings () {
+      onResize() {
+        pi.debounce(this.handleResize, 300, {maxWait: 500})()
+      },
+      handleResize() {
+        this.handleMirrorResize()
+      },
+      handleMirrorResize() {
+        if (this.instance) {
+          const breakpoint = this.$vuetify.breakpoint
+
+          let mirrorW = breakpoint.width
+          if (this.drawer && !this.$refs.drawer.showOverlay) {
+            mirrorW = mirrorW - this.$refs.drawer.calculatedWidth
+          }
+
+          const mirrorH = breakpoint.height - this.$refs.header.computedHeight
+          this.instance.setSize(mirrorW, mirrorH)
+        }
+      },
+      openThemeSettings() {
         this.$vuetify.goTo(0)
         this.themeSettingDrawer = (!this.themeSettingDrawer)
       },
       onMirrorReady(cm) {
         const mirror = new NMAssist(cm)
-        const mirrorW = this.$vuetify.breakpoint.width
-        const mirrorH = this.$vuetify.breakpoint.height - this.$refs.header.computedHeight
 
-        mirror.setSize(mirrorW, mirrorH)
         mirror.chgStyle({padding: '8px'})
         mirror.mapPredefineKeys({Esc: 'Ctrl-Esc'})
 
         this.instance = mirror
+        this.handleMirrorResize()
 
         //TODO rem
-        window.mirror=mirror
+        window.mirror = mirror
       }
+    },
+
+    watch: {
     }
 
   }

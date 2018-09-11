@@ -11,6 +11,7 @@ import uniqueId from 'lodash/uniqueId'
 import delay from 'lodash/delay'
 import has from 'lodash/has'
 import clone from 'lodash/clone'
+import debounce from 'lodash/debounce'
 
 const lodashModules = {
   isNull,
@@ -21,7 +22,8 @@ const lodashModules = {
   uniqueId,
   delay,
   has,
-  clone
+  clone,
+  debounce
 }
 
 const storage = global.localStorage
