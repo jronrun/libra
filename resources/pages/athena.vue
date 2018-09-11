@@ -150,12 +150,6 @@
       global.getApp.$on('APP_THEME_SETTINGS', () => {
         this.openThemeSettings()
       })
-
-      global.getApp.$on('APP_FULL_SCREEN', (isFull) => {
-        if (isFull) {
-          pi.delay(() => this.handleResize(), 800)
-        }
-      })
     },
 
     methods: {
