@@ -32,11 +32,22 @@
 
     <v-content>
       <v-container fill-height :style="style.container">
-        <v-layout wrap :style="style.layout" v-resize="onResize" ref="layout">
-          <no-ssr>
-            <codemirror v-model="code" :options="mirrorOptions" @ready="onMirrorReady">
-            </codemirror>
-          </no-ssr>
+        <v-layout wrap :style="style.layout">
+
+          <v-flex v-show="leftFlex.visible" :xs6="leftFlex.xs6" :xs12="leftFlex.xs12" :style="style.flex" v-resize="onResize">
+            <v-card :style="style.card">
+              <no-ssr>
+                <codemirror v-model="code" :options="mirrorOptions" @ready="onMirrorReady">
+                </codemirror>
+              </no-ssr>
+            </v-card>
+          </v-flex>
+          <v-flex v-show="rightFlex.visible" :xs6="rightFlex.xs6" :xs12="rightFlex.xs12" :style="style.flex" ref="flex_view">
+            <v-card :style="style.card">
+                aaa
+            </v-card>
+          </v-flex>
+
         </v-layout>
       </v-container>
     </v-content>
@@ -60,6 +71,12 @@
     ({NMAssist} = require('~/plugins/notemirror'))
   }
 
+  const doCompose = (target, visible = false, xs6 = false, xs12 = false) => {
+    target.visible = visible
+    target.xs6 = xs6
+    target.xs12 = xs12
+  }
+
   export default {
     layout: 'blank',
     components: {
@@ -70,6 +87,16 @@
       instance: null,
       code: '',
       mirrorOptions: null,
+      leftFlex: {
+        visible: true,
+        xs6: false,
+        xs12: true
+      },
+      rightFlex: {
+        visible: false,
+        xs6: false,
+        xs12: false
+      },
       style: {
         layout: {
           margin: 0,
@@ -78,6 +105,13 @@
         container: {
           padding: 0,
           margin: 0
+        },
+        flex: {
+          padding: 0
+        },
+        card: {
+          'box-shadow': 'none',
+          height: '100%'
         }
       },
       drawer: false,
@@ -111,6 +145,23 @@
     },
 
     methods: {
+      // 1 left flex full, 2 half left & half right, 3 right flex full
+      compose(type = 1) {
+        switch (type) {
+          case 1:
+            doCompose(this.leftFlex, true, false, true)
+            doCompose(this.rightFlex, false)
+            break
+          case 2:
+            doCompose(this.leftFlex, true, true, false)
+            doCompose(this.rightFlex, true, true, false)
+            break
+          case 3:
+            doCompose(this.leftFlex, false)
+            doCompose(this.rightFlex, true, false, true)
+            break
+        }
+      },
       onResize() {
         pi.debounce(this.handleResize, 300, {maxWait: 500})()
       },
@@ -121,7 +172,7 @@
         if (this.instance) {
           const breakpoint = this.$vuetify.breakpoint
 
-          let mirrorW = breakpoint.width
+          let mirrorW = breakpoint.width - ((this.$refs.flex_view || {}).width || 0)
           if (this.drawer && !this.$refs.drawer.showOverlay) {
             mirrorW = mirrorW - this.$refs.drawer.calculatedWidth
           }
@@ -144,7 +195,7 @@
         this.handleMirrorResize()
 
         //TODO rem
-        window.mirror = mirror
+        window.tt=this
       }
     },
 
