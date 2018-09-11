@@ -1,6 +1,6 @@
 <template>
   <div id="themeSetting">
-    <v-toolbar color="blue" dark>
+    <v-toolbar color="primary" dark>
       <v-toolbar-title>
         {{$t('manage.settings.theme')}}
       </v-toolbar-title>
@@ -203,7 +203,7 @@
     methods: {},
 
     mounted() {
-      const theme = this.$libra.restoreTheme(this).then((theme) => {
+      this.$libra.restoreTheme(this).then((theme) => {
         this.themeColor = theme.color
         this.sideBarOption = theme.dark
       })
