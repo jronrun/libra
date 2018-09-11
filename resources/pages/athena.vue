@@ -78,6 +78,7 @@
     ({NMAssist} = require('~/plugins/notemirror'))
   }
 
+  const RESTORE_KEY = 'mirror_restore_data'
   const doCompose = (target, visible = false, xs6 = false, xs12 = false) => {
     target.visible = visible
     target.xs6 = xs6
@@ -217,13 +218,19 @@
 
         this.instance = mirror
         this.handleMirrorResize()
+        this.initRestore()
 
         //TODO rem
         window.tt=this
-      }
-    },
+      },
+      initRestore() {
+        let that = this
+        this.instance.state(pi.store(RESTORE_KEY))
 
-    watch: {
+        global.onbeforeunload = () => {
+          pi.store(RESTORE_KEY, that.instance.state())
+        }
+      }
     }
 
   }
