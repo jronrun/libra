@@ -189,7 +189,7 @@ core.styles = (target, style = {}) => {
   }
 }
 
-core.toggleFullScreen = () => {
+core.toggleFullScreen = (callback) => {
   let doc = global.document
   let docEl = doc.documentElement
 
@@ -211,14 +211,18 @@ core.toggleFullScreen = () => {
     return
   }
 
+  let switchFull = false
   if (!doc.fullscreenElement
     && !doc.mozFullScreenElement
     && !doc.webkitFullscreenElement
     && !doc.msFullscreenElement) {
     requestFullScreen.call(docEl)
+    switchFull = true
   } else {
     cancelFullScreen.call(doc)
   }
+
+  core.isFunction(callback) && callback(switchFull)
 }
 
 export default core

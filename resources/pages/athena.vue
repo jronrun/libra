@@ -32,9 +32,12 @@
 
     <v-content>
       <v-container fill-height :style="style.container">
-        <v-layout wrap :style="style.layout">
+        <v-layout wrap :style="style.layout" v-resize="onResize">
 
-          <v-flex v-show="leftFlex.visible" :xs6="leftFlex.xs6" :xs12="leftFlex.xs12" :style="style.flex" v-resize="onResize">
+          <v-flex v-show="leftFlex.visible"
+                  :xs6="leftFlex.xs6"
+                  :xs12="leftFlex.xs12"
+                  :style="style.flex" ref="flex_mirror">
             <v-card :style="style.card">
               <no-ssr>
                 <codemirror v-model="code" :options="mirrorOptions" @ready="onMirrorReady">
@@ -42,8 +45,12 @@
               </no-ssr>
             </v-card>
           </v-flex>
-          <v-flex v-show="rightFlex.visible" :xs6="rightFlex.xs6" :xs12="rightFlex.xs12" :style="style.flex" ref="flex_view">
-            <v-card :style="style.card">
+
+          <v-flex v-show="rightFlex.visible"
+                  :xs6="rightFlex.xs6"
+                  :xs12="rightFlex.xs12"
+                  :style="style.flex" ref="flex_view">
+            <v-card :style="style.card" :width="flexViewWidth">
                 aaa
             </v-card>
           </v-flex>
@@ -97,6 +104,7 @@
         xs6: false,
         xs12: false
       },
+      flexViewWidth: 0,
       style: {
         layout: {
           margin: 0,
@@ -142,6 +150,12 @@
       global.getApp.$on('APP_THEME_SETTINGS', () => {
         this.openThemeSettings()
       })
+
+      global.getApp.$on('APP_FULL_SCREEN', (isFull) => {
+        if (isFull) {
+          pi.delay(() => this.handleResize(), 800)
+        }
+      })
     },
 
     methods: {
@@ -167,9 +181,25 @@
       },
       handleResize() {
         this.handleMirrorResize()
+        this.handlePreviewResize()
+      },
+      handlePreviewResize() {
+        if (this.rightFlex.visible) {
+          const breakpoint = this.$vuetify.breakpoint
+          if (this.rightFlex.xs6) {
+            let previewW = breakpoint.width - ((this.$refs.flex_mirror || {}).width || 0)
+            if (this.drawer && !this.$refs.drawer.showOverlay) {
+              previewW = previewW - this.$refs.drawer.calculatedWidth
+            }
+
+            this.flexViewWidth = previewW
+          } else if (this.rightFlex.xs12) {
+            this.flexViewWidth = breakpoint.width
+          }
+        }
       },
       handleMirrorResize() {
-        if (this.instance) {
+        if (this.instance && this.leftFlex.visible) {
           const breakpoint = this.$vuetify.breakpoint
 
           let mirrorW = breakpoint.width - ((this.$refs.flex_view || {}).width || 0)

@@ -104,7 +104,9 @@
 
     methods: {
       handleFullScreen() {
-        pi.toggleFullScreen()
+        pi.toggleFullScreen((isFull) => {
+          global.getApp.$emit('APP_FULL_SCREEN', isFull)
+        })
       },
       handleLocale() {
         this.$i18n.change(this.localesSelected.value)
