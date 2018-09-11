@@ -17,7 +17,7 @@ let doDefineEx = (cmd, exHandle, desc = '', shortCmd) => {
     shortCmd: shortCmd || cmd
   }
 
-  NMAssist.defineEx(exBody.cmd, exBody.shortCmd, (cm, params) => {
+  CodeMirror.Vim.defineEx(exBody.cmd, exBody.shortCmd, (cm, params) => {
     params = Object.assign({
       args: [],
       argString: '',
