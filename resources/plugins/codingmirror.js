@@ -102,7 +102,7 @@ global.CodeMirror = CodeMirror
       }
     }
  */
-import CMAssist from '../utils/CMAssist'
+import CMAssist from '../assets/CMAssist'
 
 CMAssist.setMirrorBase({
   // theMirrorBasePath: 'https://cdn.bootcss.com/codemirror/5.38.0',

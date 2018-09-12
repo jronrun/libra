@@ -1,7 +1,7 @@
 'use strict'
 
 import pi from '~pi'
-import CMAssist from '../utils/CMAssist'
+import CMAssist from './CMAssist'
 
 const doDefineEx = (cmd, exHandle, desc = '', shortCmd) => {
   if (!cmd || !pi.isFunction(exHandle)) {

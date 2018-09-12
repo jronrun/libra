@@ -16,6 +16,6 @@ import 'codemirror/addon/lint/yaml-lint'
 
 import 'codemirror/keymap/vim'
 
-import NMAssist from '../utils/NMAssist'
-import NMAssistDirective from '../utils/NMAssistDirective'
+import NMAssist from '../assets/NMAssist'
+import NMAssistDirective from '../assets/NMAssistDirective'
 export { NMAssist, CMAssist, NMAssistDirective }

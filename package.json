@@ -36,6 +36,7 @@
     "diff-match-patch": "^1.0.4",
     "htmlhint": "^0.10.1",
     "http-status": "^1.2.0",
+    "js-beautify": "^1.8.6",
     "lz-string": "^1.4.4",
     "nuxt": "^1.4.2",
     "perfect-scrollbar": "^1.4.0",
