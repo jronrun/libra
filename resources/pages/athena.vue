@@ -74,8 +74,9 @@
   import '~/static/mirror/theme/lemon.css'
 
   let NMAssist
+  let NMAssistDirective
   if (process.browser) {
-    ({NMAssist} = require('~/plugins/notemirror'))
+    ({NMAssist, NMAssistDirective} = require('~/plugins/notemirror'))
   }
 
   const RESTORE_KEY = 'mirror_restore_data'
@@ -212,16 +213,13 @@
       },
       onMirrorReady(cm) {
         const mirror = new NMAssist(cm)
-
         mirror.chgStyle({padding: '8px'})
         mirror.mapPredefineKeys({Esc: 'Ctrl-Esc'})
 
         this.instance = mirror
         this.handleMirrorResize()
         this.initRestore()
-
-        //TODO rem
-        window.tt=this
+        this.initDirectives()
       },
       initRestore() {
         let that = this
@@ -230,6 +228,21 @@
         global.onbeforeunload = () => {
           pi.store(RESTORE_KEY, that.instance.state())
         }
+      },
+      initDirectives() {
+        const assistDirective = new NMAssistDirective(this.instance)
+        assistDirective.registerHandle({
+          w: function (args, cm) {
+            alert(JSON.stringify(args))
+            this.w(args,cm)
+          }
+        })
+
+        assistDirective.register('test', false, function (args, cm) {
+          alert('test')
+          this.w(args,cm)
+        })
+
       }
     }
 

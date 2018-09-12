@@ -3,11 +3,9 @@
 import pi from '~pi'
 import CMAssist from '../utils/CMAssist'
 
-const definedEx = []
-
-let doDefineEx = (cmd, exHandle, desc = '', shortCmd) => {
+const doDefineEx = (cmd, exHandle, desc = '', shortCmd) => {
   if (!cmd || !pi.isFunction(exHandle)) {
-    return definedEx
+    return
   }
 
   let exBody = {
@@ -36,10 +34,9 @@ let doDefineEx = (cmd, exHandle, desc = '', shortCmd) => {
 
     exBody.exHandle(params, cm)
   })
-
-  definedEx.push(exBody)
-  return definedEx
 }
+
+export { doDefineEx as defineEx }
 
 class NMAssist extends CMAssist {
   /*

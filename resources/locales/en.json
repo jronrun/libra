@@ -22,6 +22,9 @@
   "button": {
     "close": "Close"
   },
+  "directive": {
+
+  },
   "login": {
     "title": "Login - Libra",
     "description": "libra",
