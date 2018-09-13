@@ -121,6 +121,25 @@ core.css = (style, styleId) => {
   appendToHead(styleId, link)
 }
 
+core.addStyle = (styleString, styleId) => {
+  let style = document.createElement('style')
+  style.type = 'text/css'
+  style.innerHTML = styleString
+  appendToHead(styleId, style)
+}
+
+core.styles = (target, style = {}) => {
+  if (core.isString(target)) {
+    for (let el of core.query(target, true)) {
+      core.styles(el, style)
+    }
+  } else if (target) {
+    for (let [k, v] of Object.entries(style)) {
+      target.style[k] = v
+    }
+  }
+}
+
 core.script = (script, callback, scriptId) => {
   let aScript = document.createElement('script')
   aScript.setAttribute('type', 'text/javascript')
@@ -144,7 +163,7 @@ core.script = (script, callback, scriptId) => {
   appendToHead(scriptId, aScript)
 }
 
-core.fmtJSON = (target, space = 2) => {
+core.formatJSON = (target, space = 2) => {
   return JSON.stringify(isString(target) ? JSON.parse(target) : target, false, space)
 }
 
@@ -175,18 +194,6 @@ core.query = (selector, isAll = false, context = document) => {
   }
 
   return core.querySelector(selector, isAll, context)
-}
-
-core.styles = (target, style = {}) => {
-  if (core.isString(target)) {
-    for (let el of core.query(target, true)) {
-      core.styles(el, style)
-    }
-  } else if (target) {
-    for (let [k, v] of Object.entries(style)) {
-      target.style[k] = v
-    }
-  }
 }
 
 core.toggleFullScreen = (callback) => {

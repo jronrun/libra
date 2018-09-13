@@ -33,7 +33,7 @@ Libra.install = function (Vue, options) {
         }, delay, theme)
       })
     },
-    theme: (thisOfComponent, {color, dark} = {color: undefined, dark: undefined}) => {
+    theme: (thisOfComponent, {color = undefined, dark = undefined} = {}) => {
       let update = {}
       let hasValue = false
       if (!pi.isUndefined(color)) {

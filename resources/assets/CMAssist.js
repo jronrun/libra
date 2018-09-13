@@ -177,10 +177,7 @@ class CMAssist {
     }
   }
 
-  static setMirrorBase({theMirrorBasePath, theThirdThemePath} = {
-    theMirrorBasePath: '',
-    theThirdThemePath: ''
-  }) {
+  static setMirrorBase({theMirrorBasePath = '', theThirdThemePath = ''} = {}) {
     mirrorBasePath = theMirrorBasePath
     thirdThemePath = theThirdThemePath
   }
@@ -627,7 +624,7 @@ class CMAssist {
     }
 
     if (!notUseDefaultJsonFormat && pi.isJSON(targetValue)) {
-      aDoneHandle(pi.fmtJSON(targetValue))
+      aDoneHandle(pi.formatJSON(targetValue))
     } else {
       pi.isFunction(formatHandle) && formatHandle(targetValue, (beautifyValue) => {
         aDoneHandle(beautifyValue)

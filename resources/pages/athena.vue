@@ -51,7 +51,7 @@
                   :xs12="rightFlex.xs12"
                   :style="style.flex" ref="flex_view">
             <v-card :style="style.card" :width="flexViewWidth">
-                aaa
+              <div v-html="previewText"></div>
             </v-card>
           </v-flex>
 
@@ -73,11 +73,16 @@
   import SettingsFab from '~/components/widgets/SettingsFab'
   import '~/static/mirror/theme/lemon.css'
 
+  let IFrames
+  let MarkdownAssist
+
   let NMAssist
   let NMAssistDirective
-  if (process.browser) {
-    ({NMAssist, NMAssistDirective} = require('~/plugins/notemirror'))
-  }
+  if (process.browser) {(
+      {NMAssist, NMAssistDirective} = require('~/plugins/notemirror'),
+      MarkdownAssist = require('~/assets/MarkdownAssist').default,
+      IFrames = require('~/assets/IFrames').default
+  )}
 
   const RESTORE_KEY = 'mirror_restore_data'
   const doCompose = (target, visible = false, xs6 = false, xs12 = false) => {
@@ -93,6 +98,8 @@
       ThemeSettings
     },
     data: () => ({
+      previewText: '',
+      previewInstance: null,
       instance: null,
       code: '',
       mirrorOptions: null,
@@ -154,6 +161,10 @@
       })
     },
 
+    computed:{
+
+    },
+
     methods: {
       // 1 left flex full, 2 half left & half right, 3 right flex full
       compose(type = 1) {
@@ -171,6 +182,7 @@
             doCompose(this.rightFlex, true, false, true)
             break
         }
+        pi.delay(() => this.handleResize(), 300)
       },
       onResize() {
         pi.debounce(this.handleResize, 300, {maxWait: 500})()
@@ -183,7 +195,7 @@
         if (this.rightFlex.visible) {
           const breakpoint = this.$vuetify.breakpoint
           if (this.rightFlex.xs6) {
-            let previewW = breakpoint.width - ((this.$refs.flex_mirror || {}).width || 0)
+            let previewW = breakpoint.width - ((this.$refs.flex_mirror || {}).clientWidth || 0)
             if (this.drawer && !this.$refs.drawer.showOverlay) {
               previewW = previewW - this.$refs.drawer.calculatedWidth
             }
@@ -198,7 +210,7 @@
         if (this.instance && this.leftFlex.visible) {
           const breakpoint = this.$vuetify.breakpoint
 
-          let mirrorW = breakpoint.width - ((this.$refs.flex_view || {}).width || 0)
+          let mirrorW = breakpoint.width - ((this.$refs.flex_view || {}).clientWidth || 0)
           if (this.drawer && !this.$refs.drawer.showOverlay) {
             mirrorW = mirrorW - this.$refs.drawer.calculatedWidth
           }
@@ -220,6 +232,17 @@
         this.handleMirrorResize()
         this.initRestore()
         this.initDirectives()
+
+        this.previewInstance = new MarkdownAssist(this.instance)
+
+        //TODO rem
+        global.tt=this
+        global.MarkdownAssist = MarkdownAssist
+        global.IFrames = IFrames
+      },
+      previewTexts(){
+        this.compose(3)
+        this.previewText = this.previewInstance.render(this.instance.val())
       },
       initRestore() {
         let that = this
