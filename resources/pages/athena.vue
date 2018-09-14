@@ -50,8 +50,8 @@
                   :xs6="rightFlex.xs6"
                   :xs12="rightFlex.xs12"
                   :style="style.flex" ref="flex_view">
-            <v-card :style="style.card" :width="flexViewWidth">
-              <div v-html="previewText"></div>
+            <v-card :style="style.card" :width="flexViewWidth" :id="flexViewCardId">
+
             </v-card>
           </v-flex>
 
@@ -98,11 +98,11 @@
       ThemeSettings
     },
     data: () => ({
-      previewText: '',
-      previewInstance: null,
       instance: null,
+      frameInstance: null,
       code: '',
       mirrorOptions: null,
+      flexViewCardId: 'flexViewCard',
       leftFlex: {
         visible: true,
         xs6: false,
@@ -152,6 +152,11 @@
 
     mounted() {
       this.$libra.restoreTheme(this)
+      IFrames.registers({
+
+      })
+
+      this.frameInstance = IFrames.create({}, `#${this.flexViewCardId}`)
     },
 
     created() {
@@ -233,8 +238,6 @@
         this.initRestore()
         this.initDirectives()
 
-        this.previewInstance = new MarkdownAssist(this.instance)
-
         //TODO rem
         global.tt=this
         global.MarkdownAssist = MarkdownAssist
@@ -242,7 +245,8 @@
       },
       previewTexts(){
         this.compose(3)
-        this.previewText = this.previewInstance.render(this.instance.val())
+        let previewInstance = new MarkdownAssist(this.instance)
+        previewInstance.render(this.instance.val())
       },
       initRestore() {
         let that = this
