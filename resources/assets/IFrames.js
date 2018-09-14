@@ -391,7 +391,7 @@ class IFrames {
     seamless = null,
     src = null,
     srcdoc = null
-  } = {}, selector) {
+  } = {}, selector = 'body') {
     name = name || id
 
     const iFrame = document.createElement('iframe')
@@ -402,7 +402,7 @@ class IFrames {
       mozallowfullscreen, webkitallowfullscreen, referrerpolicy, scrolling, sandbox, seamless, src, srcdoc
     })
 
-    pi.querySelector('body').append(iFrame)
+    pi.querySelector(selector).append(iFrame)
 
     try {
       frameAssist.document = frameAssist.getDocument()
