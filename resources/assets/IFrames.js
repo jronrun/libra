@@ -9,7 +9,7 @@ let encode = (target) => {
 }
 
 let decode = (target) => {
-  return pi.unsign(target || '{}') // return JSON.parse(target || '{}')
+  return pi.deepUnsign(target || '{}') // return JSON.parse(target || '{}')
 }
 
 const isRoot = (targetWin) => {
@@ -43,14 +43,14 @@ const ackCalls = (eventId, ackCallback) => {
 /**
  * type     1 tell, 2 reply, 3 ack
  */
-const eventOn = (eventName, type, data = {}, sendFunction, ackCallback, eventId) => {
+const eventOn = (eventName, type, data = {}, sendFunction, ackCallback, eventId, instanceOfAssist) => {
   if (sendFunction && eventName && eventName.length > 0) {
     eventId = eventId || (type + pi.uniqueId() + '_' + Date.now())
     if (pi.isFunction(ackCallback)) {
       ackCalls(eventId, ackCallback)
     }
 
-    sendFunction({id: eventId, event: eventName, type, data})
+    sendFunction.bind(instanceOfAssist)({id: eventId, event: eventName, type, data})
   }
 }
 
@@ -116,6 +116,10 @@ class IFrameAssist {
     return this
   }
 
+  getUrl() {
+    return this.isUrlSource() ? this.attr('src') : null
+  }
+
   openUrl(url, onReadyHandle = (instanceOfIFrameAssist, event) => {}) {
     this.attr({ src: url })
     this.onReadyHandle = (e) => {
@@ -131,7 +135,7 @@ class IFrameAssist {
       this.getDocument().location.reload(true)
     } catch (e) {
       if (this.isUrlSource()) {
-        this.openUrl(this.attr('src'), onReadyHandle || this.onReadyHandle)
+        this.openUrl(this.getUrl(), onReadyHandle || this.onReadyHandle)
       }
     }
 
@@ -178,14 +182,15 @@ class IFrameAssist {
   }
 
   tellEvent(eventName, data, ackCallback) {
-    eventOn(eventName, 1, data, this.tell, ackCallback)
+    eventOn(eventName, 1, data, this.tell, ackCallback, false, this)
   }
 
   replyEvent(eventName, data, ackCallback) {
-    eventOn(eventName, 2, data, this.reply, ackCallback)
+    eventOn(eventName, 2, data, this.reply, ackCallback, false, this)
   }
 
   listen(callback, once, aListener) {
+    const that = this
     if (aListener && aListener.postMessage) {
       if (pi.isFunction(callback)) {
         let _cb = null
@@ -194,7 +199,7 @@ class IFrameAssist {
             aListener.removeEventListener('message', _cb)
           }
 
-          let evtData = decode(e.originalEvent.data)
+          let evtData = decode((e.originalEvent || e).data)
           let ackFunc = ackCalls(evtData.id)
           let ackFuncAvail = pi.isFunction(ackFunc)
 
@@ -207,7 +212,7 @@ class IFrameAssist {
               //1 tell, 2 reply
               switch (evtData.type) {
                 case 1:
-                  ackFunc = this.reply
+                  ackFunc = that.reply
                   break
                 case 2:
                   ackFunc = function (data, origin) {
@@ -219,7 +224,7 @@ class IFrameAssist {
                   break
               }
 
-              eventOn(evtData.event, 3, ackData, ackFunc, false, evtData.id)
+              eventOn(evtData.event, 3, ackData, ackFunc, false, evtData.id, that)
             }
           } else {
             callback(evtData, e)
@@ -260,6 +265,65 @@ const getDefaultFrame = () => {
   return null == aFrames ? (aFrames = IFrames.of()) : aFrames
 }
 
+/**
+ * <pre> Usage:
+ * // 1. In Window
+   // register event handle
+
+   const testIFrameId = 'testIFrameId'
+   IFrames.registers({
+      TEST: (evtName, evtData) => {
+        console.info('in window: ' + evtName + ' ' + JSON.stringify(evtData))
+        return {windowTestAckData: {msg: 'this from window TEST event ack'}}
+      }
+    })
+
+   const testIFrame = IFrames.create({id: testIFrameId, width: 200, height: 200, frameborder: 2})
+   // the target url page must has load the script IFrame.js
+   testIFrame.openUrl('http://192.168.20.19:3000/athena',
+   (assist) => console.info('in window: ' + assist.getUrl() + ' load successfully'))
+
+
+
+
+   // 2. In IFrame
+   // register event handle
+   IFrames.registers({
+      TEST: (evtName, evtData) => {
+        console.warn('in iFrame: ' + evtName + ' ' + JSON.stringify(evtData))
+        return {iFrameTestAckData: {msg: 'this from iFrame TEST event ack'}}
+      }
+    })
+   IFrames.register('TEST_ONCE', (evtName, evtData) => {
+      console.warn('in iFrame (TEST_ONCE): ' + evtName + ' ' + JSON.stringify(evtData))
+      return {TEST_ONCE_AckData: {once: true}}
+    }, true)
+
+   const selfIFrame = IFrames.of()
+
+
+
+   // 3. when window & iFrame ready
+   // In Window
+   testIFrame.tellEvent('TEST', {windowTriggerEvent: {msg: 'this from window tell iFrame'}}, (data) => {
+      console.info('in window: ' + JSON.stringify(data))
+    })
+
+    testIFrame.tellEvent('TEST_ONCE', {windowTriggerTestOnce: {msg: 'TEST_ONCE this from window tell iFrame'}}, (data) => {
+      console.info('in window: (only first call is valid) ' + JSON.stringify(data))
+    })
+
+    IFrames.of(testIFrameId).replyEvent('TEST',
+      {iFrameTriggerEvent: {msg: 'this from iFrame reply window', callInWindow: true}}, (data) => {
+      console.info('in window: ' + JSON.stringify(data))
+    })
+
+   // In IFrame
+   selfIFrame.replyEvent('TEST', {iFrameTriggerEvent: {msg: 'this from iFrame reply window'}}, (data) => {
+      console.warn('in iFrame: ' + JSON.stringify(data))
+    })
+</pre>
+ */
 class IFrames {
 
   /**
@@ -269,6 +333,10 @@ class IFrames {
    */
   static of(target) {
     return new IFrameAssist(target)
+  }
+
+  static getInstance() {
+    return getDefaultFrame()
   }
 
   static setEncryption (encodeFunc, decodeFunc) {
@@ -382,7 +450,7 @@ class IFrames {
   }
 
   /**
-   * Register events handle
+   * Register events handle, events { TEST: (evtName, evtData) => {} }
    * @param events
    * @param once
    */
@@ -397,7 +465,7 @@ class IFrames {
   /**
    * Register event handle, callback(evtName, evtData, data)
    * @param eventName
-   * @param callback (data, event) => {}
+   * @param callback (evtName, evtData) => {}
    * @param once
    */
   static register(eventName, callback, once) {
