@@ -21,7 +21,7 @@ const isRoot = (targetWin) => {
     fr=IFrames.of('#ifr_100001')
     fr.listenReply()
     // if 'SOURCE' event return {src: 'abc'}
-    fr.tellEvent('SOURCE', {}, function(data){console.log('ack: ' + JSON.stringify(data))})
+    fr.tellEvent('SOURCE', {}, (data) => {console.log('ack: ' + JSON.stringify(data))})
     // -> ack: {"src": "abc"}
    */
 const ackCalls = (eventId, ackCallback) => {
@@ -43,14 +43,14 @@ const ackCalls = (eventId, ackCallback) => {
 /**
  * type     1 tell, 2 reply, 3 ack
  */
-const eventOn = (eventName, type, data = {}, sendFunction, ackCallback, eventId, instanceOfAssist) => {
-  if (sendFunction && eventName && eventName.length > 0) {
+const eventOn = (eventName, type, data = {}, sender, ackCallback, eventId, instanceOfAssist) => {
+  if (sender && eventName && eventName.length > 0) {
     eventId = eventId || (type + pi.uniqueId() + '_' + Date.now())
     if (pi.isFunction(ackCallback)) {
       ackCalls(eventId, ackCallback)
     }
 
-    sendFunction.bind(instanceOfAssist)({id: eventId, event: eventName, type, data})
+    sender.bind(instanceOfAssist)({id: eventId, event: eventName, type, data})
   }
 }
 
@@ -194,7 +194,7 @@ class IFrameAssist {
     if (aListener && aListener.postMessage) {
       if (pi.isFunction(callback)) {
         let _cb = null
-        _cb = function (e) {
+        _cb = (e) => {
           if (once) {
             aListener.removeEventListener('message', _cb)
           }
@@ -215,7 +215,7 @@ class IFrameAssist {
                   ackFunc = that.reply
                   break
                 case 2:
-                  ackFunc = function (data, origin) {
+                  ackFunc = (data, origin) => {
                     let ackTell = IFrames.of(evtData.iframe.id)
                     if (ackTell.isAvailable()) {
                       ackTell.tell(data, origin)
@@ -237,11 +237,11 @@ class IFrameAssist {
   }
 
   listenTell(callback, once) {
-    this.listen(callback || function () {}, once, this.instance.contentWindow)
+    this.listen(callback || (() => {}), once, this.instance.contentWindow)
   }
 
   listenReply(callback, once) {
-    this.listen(callback || function () {}, once, window)
+    this.listen(callback || (() => {}), once, window)
   }
 
   getInfo() {
