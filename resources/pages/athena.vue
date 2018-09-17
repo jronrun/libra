@@ -71,18 +71,21 @@
   import pi from '~pi'
   import ThemeSettings from '@/components/ThemeSettings'
   import SettingsFab from '~/components/widgets/SettingsFab'
-  import '~/static/mirror/theme/lemon.css'
 
   let IFrames
   let MarkdownAssist
 
   let NMAssist
   let NMAssistDirective
-  if (process.browser) {(
+  if (process.browser) {
+    (
       {NMAssist, NMAssistDirective} = require('~/plugins/notemirror'),
       MarkdownAssist = require('~/assets/MarkdownAssist').default,
       IFrames = require('~/assets/IFrames').default
-  )}
+    )
+
+    NMAssist.requireTheme('lemon')
+  }
 
   const RESTORE_KEY = 'mirror_restore_data'
   const doCompose = (target, visible = false, xs6 = false, xs12 = false) => {

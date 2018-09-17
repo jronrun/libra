@@ -4,9 +4,9 @@ import pi from '~pi'
 
 const modes = {}
 const languages = {}
-const loadedTheme = ['default', 'lemon']
+const loadedTheme = ['default']
 const thirdThemes = [
-  'chrome-devtools', 'cssedit', 'eiffel', 'github', 'mac-classic', 'one-dark', 'sidewalkchalk', 'summerfruit',
+  'lemon', 'chrome-devtools', 'cssedit', 'eiffel', 'github', 'mac-classic', 'one-dark', 'sidewalkchalk', 'summerfruit',
   'tomorrow-night-blue', 'toy-chest'
 ]
 const themes = [...[
@@ -95,9 +95,10 @@ const predefineKeyActions = {
   'Ctrl-L':'guttersTgl'
 }
 
-let mirrorBasePath = ''
-let thirdThemePath = ''
-let mirrorRepository
+let mirrorRepository = {
+  basePath: '',
+  thirdThemePath: ''
+}
 
 class CMAssist {
 
@@ -106,10 +107,7 @@ class CMAssist {
     this.instance = instanceOfCodeMirror
     this.commands = []
 
-    mirrorRepository = Object.assign({
-      basePath: mirrorBasePath,
-      thirdThemePath: thirdThemePath
-    }, assistOptions)
+    Object.assign(mirrorRepository, assistOptions)
 
     this.events = Object.assign({
       inputRead: (cm, changeObj) => {
@@ -171,9 +169,11 @@ class CMAssist {
     }
   }
 
-  static setMirrorBase({theMirrorBasePath = '', theThirdThemePath = ''} = {}) {
-    mirrorBasePath = theMirrorBasePath
-    thirdThemePath = theThirdThemePath
+  static setMirrorBase({basePath = '', thirdThemePath = ''} = {}) {
+    Object.assign(mirrorRepository, {
+      basePath,
+      thirdThemePath
+    })
   }
 
   static getMirrorOptions(options = {}) {

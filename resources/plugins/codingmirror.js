@@ -102,6 +102,9 @@ global.CodeMirror = CodeMirror
       }
     }
  */
-import CMAssist from '../assets/CMAssistConfig'
+import CMAssist from '../assets/CMAssist'
+import CMAssistConfig from '../assets/CMAssistConfig'
+CMAssistConfig(CMAssist)
+
 
 export { CMAssist }
