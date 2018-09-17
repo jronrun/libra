@@ -243,11 +243,17 @@
         global.MarkdownAssist = MarkdownAssist
         global.IFrames = IFrames
       },
+
+      setText(txt) {
+        this.instance.val(pi.unsign(txt))
+      },
       previewTexts(){
         this.compose(3)
         let previewInstance = new MarkdownAssist(this.instance)
-        previewInstance.render(this.instance.val())
+        let text = previewInstance.render(this.instance.val())
+        this.frameInstance.write(text)
       },
+
       initRestore() {
         let that = this
         this.instance.state(pi.store(RESTORE_KEY))

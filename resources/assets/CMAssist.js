@@ -31,7 +31,7 @@ const highlightTemplate = ({id, theme} = {}) => `
   </div>
 `
 
-let initializeModeInfo = () => {
+const initializeModeInfo = () => {
   let {modeInfo} = CodeMirror
   if (modeInfo.length > 0 && (modeInfo[0].id || 0) > 0) {
     return modeInfo
@@ -53,7 +53,7 @@ let initializeModeInfo = () => {
   return CodeMirror.modeInfo = aModeInfoArray
 }
 
-let getModeInfo = (lang = '') => {
+const getModeInfo = (lang = '') => {
   lang = lang.toLowerCase()
   let info = languages[lang] || modes[lang]
   if (info) {
@@ -75,7 +75,7 @@ let getModeInfo = (lang = '') => {
     || null
 }
 
-let loadModeReady = (modeBasePath, callback) => {
+const loadModeReady = (modeBasePath, callback) => {
   if (pi.isFunction(CodeMirror.autoLoadMode)) {
     pi.isFunction(callback) && callback()
   } else {
@@ -87,8 +87,8 @@ let loadModeReady = (modeBasePath, callback) => {
 }
 
 let inputReadNotifyEvtHandle = null
-let inputReadNotifyEvt = 'inputReadNotifyEvt'
-let customEvts = ['fullscreen']
+const inputReadNotifyEvt = 'inputReadNotifyEvt'
+const customEvts = ['fullscreen']
 
 const predefineKeyActions = {
   Esc: 'fullscreenTgl',
@@ -97,22 +97,16 @@ const predefineKeyActions = {
 
 let mirrorBasePath = ''
 let thirdThemePath = ''
+let mirrorRepository
 
 class CMAssist {
-
-  /*
-  instance = null
-  assistOptions
-  events
-  commands = []
-   */
 
   constructor(instanceOfCodeMirror, events = {}, assistOptions = {}) {
     initializeModeInfo()
     this.instance = instanceOfCodeMirror
     this.commands = []
 
-    this.assistOptions = Object.assign({
+    mirrorRepository = Object.assign({
       basePath: mirrorBasePath,
       thirdThemePath: thirdThemePath
     }, assistOptions)
@@ -217,7 +211,7 @@ class CMAssist {
     return getModeInfo(lang)
   }
 
-  isThirdTheme(target = this.theme()) {
+  static isThirdTheme(target) {
     return thirdThemes.filter(item => {
       return item === target
     }).length > 0
@@ -235,16 +229,16 @@ class CMAssist {
     return isBlackBG
   }
 
-  requireTheme(themeName) {
+  static requireTheme(themeName) {
     themeName = /^solarized/.test(themeName) ? 'solarized' : themeName
     if (!themes.includes(themeName)) {
       throw Error('Cound not find theme ' + themeName)
     }
 
     if (!loadedTheme.includes(themeName)) {
-      let themePath = this.isThirdTheme(themeName)
-        ? `${this.assistOptions.thirdThemePath}/${themeName}.css`
-        : `${this.assistOptions.basePath}/theme/${themeName}.css`
+      let themePath = CMAssist.isThirdTheme(themeName)
+        ? `${mirrorRepository.thirdThemePath}/${themeName}.css`
+        : `${mirrorRepository.basePath}/theme/${themeName}.css`
       pi.css(themePath)
       loadedTheme.push(themeName)
     }
@@ -334,7 +328,7 @@ class CMAssist {
       return this.attrs('theme')
     }
 
-    th = this.requireTheme(th)
+    th = CMAssist.requireTheme(th)
     this.attrs('theme', th)
     return th
   }
@@ -376,12 +370,12 @@ class CMAssist {
 
   autoLoadMode(mode) {
     let cm = this.instance
-    loadModeReady(this.assistOptions.basePath, () => {
+    loadModeReady(mirrorRepository.basePath, () => {
       CodeMirror.autoLoadMode(cm, mode)
     })
   }
 
-  requireMode(mode, callback) {
+  static requireMode(mode, callback) {
     let aLangInfo = CMAssist.langInfo(mode)
     if (null == aLangInfo) {
       console && console.warn(`requireMode ignored. invalid mode ${mode}`)
@@ -398,7 +392,7 @@ class CMAssist {
       }
     }
 
-    loadModeReady(this.assistOptions.basePath, () => {
+    loadModeReady(mirrorRepository.basePath, () => {
       reqM(aLangInfo.mode)
     })
   }
@@ -715,14 +709,14 @@ class CMAssist {
     this.instance.setSize(width, height)
   }
 
-  highlight(inputSelector, modeSpec, outputSelector, callback) {
-    this.requireMode(modeSpec, (modeInfo) => {
+  static highlight(inputSelector, modeSpec, outputSelector, callback) {
+    CMAssist.requireMode(modeSpec, (modeInfo) => {
       CodeMirror.runMode(pi.query(inputSelector).value, modeInfo.mime, pi.query(outputSelector))
       pi.isFunction(callback) && callback(modeInfo)
     })
   }
 
-  highlights({
+  static highlights({
       input = '',
       inputIsElement = false,
       callback = (result) => {},
@@ -742,7 +736,7 @@ class CMAssist {
     pi.query('body').append(div)
     pi.query(hlSrcId).value = inputIsElement ? pi.query(input).value : input
 
-    this.highlight(hlSrcId, mode, hlPreId, (modeInfo) => {
+    CMAssist.highlight(hlSrcId, mode, hlPreId, (modeInfo) => {
       let theOutput = pi.query(hlCtxId).innerHTML
       pi.query(`#${hlId}`).remove()
       pi.isFunction(callback) && callback(theOutput, modeInfo, theme);
