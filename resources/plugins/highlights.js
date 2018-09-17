@@ -5,6 +5,7 @@ import 'codemirror/lib/codemirror.css'
 
 import 'codemirror/addon/runmode/runmode'
 
-import CMAssist, { highlights } from '../assets/CMAssistConfig'
+global.CodeMirror = CodeMirror
 
+import CMAssist, { highlights } from '../assets/CMAssistConfig'
 export { CMAssist, highlights }
