@@ -744,4 +744,5 @@ class CMAssist {
   }
 }
 
+export const highlights = CMAssist.highlights
 export default CMAssist
