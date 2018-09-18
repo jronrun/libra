@@ -9,6 +9,7 @@
       :direction="direction"
       :open-on-hover="hover"
       :transition="transition"
+      style="z-index: 50000;"
     >
 
       <v-btn slot="activator" v-model="fab" color="primary" dark fab small>
