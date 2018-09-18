@@ -7,11 +7,13 @@
   import 'perfect-scrollbar/css/perfect-scrollbar.css'
   import PerfectScrollbar from 'perfect-scrollbar'
 
+  let MarkdownAssist
   let highlights
   let IFrames
   if (process.browser) {
     (
       { highlights } = require('~/plugins/highlights'),
+        // MarkdownAssist = require('~/assets/MarkdownAssist').default,
       IFrames = require('~/assets/IFrames').default
     )
   }
@@ -25,6 +27,12 @@
     }),
 
     methods: {
+      importTest() {
+        import('~/assets/MarkdownAssist').then((module)=>{
+          const b = module.default;
+          console.log(b)
+        })
+      },
       scrolling() {
         if (this.perfectScroll) {
           this.perfectScroll.update()
@@ -39,6 +47,23 @@
           })
 
         }
+      },
+
+      previewInput({input, mode, theme}) {
+        if (pi.isURL(input)) {
+          IFrames.getInstance().openUrl(input)
+          return
+        }
+
+        const that = this
+        this.text = highlights({
+          input, mode, theme,
+          callback: (result, elId) => {
+            pi.query(`#${that.preview}`).innerHTML = result
+            that.scrollCtxId = elId
+            that.scrolling()
+          }
+        })
       }
     },
 
@@ -47,18 +72,15 @@
 
       IFrames.registers({
         REFRESH: (evtName, evtData) => {
-          that.text = highlights({
-            input: evtData.content,
-            mode: evtData.mode.mime || evtData.mode.name,
-            theme: evtData.theme,
-            callback: (result, elId) => {
-              pi.query(`#${that.preview}`).innerHTML = result
-              that.scrollCtxId = elId
-              that.scrolling()
-            }
-          })
+          const input = evtData.content
+          const mode = evtData.mode.mime || evtData.mode.name
+          const theme = evtData.theme
+          that.previewInput({input, mode, theme})
         }
       })
+
+      //TODO rem
+      global.ee = this
     }
   }
 </script>

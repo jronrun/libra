@@ -25,7 +25,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-toolbar color="primary" fixed :dark="$vuetify.dark" app ref="header" height="50">
+    <v-toolbar :manual-scroll="toolbarHidden" color="primary" fixed :dark="$vuetify.dark" app ref="header" height="50">
       <v-toolbar-side-icon dark @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-spacer></v-spacer>
 
@@ -65,7 +65,7 @@
       </v-container>
     </v-content>
 
-    <settings-fab></settings-fab>
+    <settings-fab :buttons="settingsButtons"></settings-fab>
 
     <v-navigation-drawer class="setting-drawer" temporary right v-model="themeSettingDrawer" hide-overlay fixed>
       <theme-settings></theme-settings>
@@ -79,14 +79,11 @@
   import SettingsFab from '~/components/widgets/SettingsFab'
 
   let IFrames
-  let MarkdownAssist
-
   let NMAssist
   let NMAssistDirective
   if (process.browser) {
     (
       {NMAssist, NMAssistDirective} = require('~/plugins/notemirror'),
-      MarkdownAssist = require('~/assets/MarkdownAssist').default,
       IFrames = require('~/assets/IFrames').default
     )
 
@@ -106,6 +103,8 @@
     return ((type + 1) > 3) ? 1 : (type + 1)
   }
 
+  const ATHENA_TOOLBAR_EVENT = 'ATHENA_TOOLBAR'
+
   export default {
     layout: 'blank',
     components: {
@@ -118,6 +117,15 @@
       code: '',
       mirrorOptions: null,
       flexViewCardId: 'flexViewCard',
+      toolbarHidden: false,
+      settingsButtons: [
+        {
+          event: ATHENA_TOOLBAR_EVENT,
+          color: 'purple',
+          icon: 'aspect_ratio',
+          label: 'athena.toolbar.toggle'
+        }
+      ],
       composeInfo: {
         type: defaultComposeType,
         icon: composeIcons[defaultComposeType],
@@ -186,6 +194,11 @@
       global.getApp.$on('APP_THEME_SETTINGS', () => {
         this.openThemeSettings()
       })
+
+      global.getApp.$on(ATHENA_TOOLBAR_EVENT, () => {
+        this.toolbarHidden = !this.toolbarHidden
+        pi.delay(() => this.handleResize(), 400)
+      })
     },
 
     computed:{
@@ -245,7 +258,11 @@
             this.flexViewWidth = breakpoint.width
           }
 
-          this.flexViewHeight = breakpoint.height - this.$refs.header.computedHeight
+          let theH = breakpoint.height
+          if (!this.toolbarHidden) {
+            theH -= this.$refs.header.computedHeight
+          }
+          this.flexViewHeight = theH
         }
       },
       handleMirrorResize() {
@@ -257,7 +274,10 @@
             mirrorW = mirrorW - this.$refs.drawer.calculatedWidth
           }
 
-          const mirrorH = breakpoint.height - this.$refs.header.computedHeight
+          let mirrorH = breakpoint.height
+          if (!this.toolbarHidden) {
+            mirrorH -= this.$refs.header.computedHeight
+          }
           this.instance.setSize(mirrorW, mirrorH)
         }
       },
@@ -283,18 +303,7 @@
 
         //TODO rem
         global.tt=this
-        global.MarkdownAssist = MarkdownAssist
         global.IFrames = IFrames
-      },
-
-      setText(txt) {
-        this.instance.val(pi.unsign(txt))
-      },
-      previewTexts(){
-        this.compose(3)
-        let previewInstance = new MarkdownAssist(this.instance)
-        let text = previewInstance.render(this.instance.val())
-        this.frameInstance.write(text)
       },
 
       initRestore() {

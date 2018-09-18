@@ -9,6 +9,10 @@ let encode = (target) => {
 }
 
 let decode = (target) => {
+  if (!pi.isString(target)) {
+    return target
+  }
+
   return JSON.parse(target || '{}')
 }
 

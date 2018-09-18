@@ -232,4 +232,8 @@ core.toggleFullScreen = (callback) => {
   core.isFunction(callback) && callback(switchFull)
 }
 
+core.isURL = (text) => {
+  return /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/.test(text)
+}
+
 export default core

@@ -38,6 +38,13 @@
         <span>{{$t('libra.fullscreen')}}</span>
       </v-tooltip>
 
+      <v-tooltip left v-for="item in buttons" :key="item.event">
+        <v-btn fab dark small :color="item.color" @click="handleButton(item.event)" slot="activator">
+          <v-icon>{{item.icon}}</v-icon>
+        </v-btn>
+        <span>{{$t(item.label)}}</span>
+      </v-tooltip>
+
     </v-speed-dial>
 
     <v-dialog v-model="localesDialog" max-width="300px">
@@ -96,6 +103,13 @@
       transition: 'slide-y-reverse-transition'
     }),
 
+    props: {
+      buttons: {
+        type: Array,
+        default: () => [/* {event, color, icon, label} */]
+      }
+    },
+
     mounted() {
       pi.delay((thiz) => {
         thiz.locales = thiz.$store.state.locales
@@ -104,6 +118,9 @@
     },
 
     methods: {
+      handleButton(eventName) {
+        global.getApp.$emit(eventName)
+      },
       handleFullScreen() {
         pi.toggleFullScreen((isFull) => {
           global.getApp.$emit('APP_FULL_SCREEN', isFull)

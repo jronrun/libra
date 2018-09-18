@@ -41,6 +41,11 @@
       }
     }
   },
+  "athena": {
+    "toolbar": {
+      "toggle": "工具栏"
+    }
+  },
   "invalid": {
     "credentials": "Username or password is incorrect, try again.",
     "locale": "The language {locale} is not supported temporarily."
