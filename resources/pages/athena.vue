@@ -31,7 +31,8 @@
     </v-toolbar>
 
     <v-content>
-      <v-container fill-height :style="style.container">
+      <!--https://stackoverflow.com/questions/51181726/vuetify-container-max-width-fixed-->
+      <v-container fill-height fluid ma-0 pa-0 :style="style.container">
         <v-layout wrap :style="style.layout" v-resize="onResize">
 
           <v-flex v-show="leftFlex.visible"
@@ -194,10 +195,9 @@
         }
 
         pi.delay(() => this.handleResize(), 300)
+
         if (1 !== type) {
-          this.syncPreview({
-            data: this.instance.state()
-          })
+          this.syncPreview({data: this.instance.state()})
         }
       },
       onResize() {
