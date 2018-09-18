@@ -124,7 +124,7 @@
         {
           event: ATHENA_TOOLBAR_EVENT,
           color: 'purple',
-          icon: 'aspect_ratio',
+          icon: 'web_asset',
           label: 'button.toggle.toolbar'
         },
         {
@@ -337,7 +337,9 @@
         this.toolbarHidden = data.toolbarHidden
 
         this.frameInstance.openUrl('/entry', () => {
-          that.compose(data.composeType)
+          if (that.composeInfo.type !== data.composeType) {
+            that.compose(data.composeType)
+          }
         })
 
         global.onbeforeunload = () => {
