@@ -22,6 +22,7 @@ module.exports = {
       statsFilename: 'webpack-stats.json'
     },
     vendor: [
+      'babel-polyfill',
       '~pi',
       'vuetify',
       'vue-i18n',
