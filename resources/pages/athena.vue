@@ -130,6 +130,7 @@
           padding: 0
         },
         card: {
+          overflow: 'hidden',
           'box-shadow': 'none',
           height: '100%'
         }
@@ -160,6 +161,7 @@
       })
 
       this.frameInstance = IFrames.create({}, `#${this.flexViewCardId}`)
+      this.frameInstance.openUrl('/entry')
     },
 
     created() {
@@ -190,7 +192,13 @@
             doCompose(this.rightFlex, true, false, true)
             break
         }
+
         pi.delay(() => this.handleResize(), 300)
+        if (1 !== type) {
+          this.syncPreview({
+            data: this.instance.state()
+          })
+        }
       },
       onResize() {
         pi.debounce(this.handleResize, 300, {maxWait: 500})()
@@ -231,6 +239,11 @@
         this.$vuetify.goTo(0)
         this.themeSettingDrawer = (!this.themeSettingDrawer)
       },
+      syncPreview({data}) {
+        if (this.rightFlex) {
+          this.frameInstance.tellEvent('REFRESH', data)
+        }
+      },
       onMirrorReady(cm) {
         const mirror = new NMAssist(cm)
         mirror.chgStyle({padding: '8px'})
@@ -240,6 +253,7 @@
         this.handleMirrorResize()
         this.initRestore()
         this.initDirectives()
+        this.instance.setNotifyContentHandle(this.syncPreview)
 
         //TODO rem
         global.tt=this

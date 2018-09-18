@@ -24,12 +24,19 @@ const blackBGMark = [
   'dark', 'night', 'black', 'abcdef'
 ]
 
-const highlightTemplate = ({id, theme} = {}) => `
-  <textarea style="display: none;" id="hl_src_${id}"></textarea>
-  <div id="hl_ctx_${id}" style="display: none;">
-    <pre id="hl_pre_${id}" class="CodeMirror cm-s-${theme}"></pre>
-  </div>
-`
+const highlightTemplate = ({id, theme, styles} = {}) => {
+  const theStyles = []
+  for (let [k, v] of Object.entries(styles)) {
+    theStyles.push(`${k}:${v}`)
+  }
+
+  return `
+    <textarea style="display: none;" id="hl_src_${id}"></textarea>
+    <div id="hl_ctx_${id}" style="display: none;">
+      <pre id="hl_pre_${id}" class="CodeMirror cm-s-${theme}" style="${theStyles.join(';')}"></pre>
+    </div>
+  `
+}
 
 const initializeModeInfo = () => {
   let {modeInfo} = CodeMirror
@@ -663,7 +670,7 @@ class CMAssist {
 
   getNotifyContent(customData = {}, evtName = 'MIRROR_INPUT_READ_NOTIFY') {
     let mirrorData = {
-      event: evtName,
+      eventName: evtName,
       data: this.state()
     }
 
@@ -671,7 +678,7 @@ class CMAssist {
     return mirrorData
   }
 
-  setNotifyContentHandle(handle) {
+  setNotifyContentHandle(handle = ({eventName, data}) => {}) {
     inputReadNotifyEvtHandle = handle
   }
 
@@ -720,6 +727,14 @@ class CMAssist {
       input = '',
       inputIsElement = false,
       callback = (result) => {},
+      styles = {
+        margin: 0,
+        padding: '1rem',
+        overflow: 'hidden',
+        position: 'relative',
+        height: '100%',
+        width: '100%'
+      },
       mode = 'text',
       theme = 'default'
     } = {}) {
@@ -731,15 +746,16 @@ class CMAssist {
 
     let div = document.createElement('div')
     div.setAttribute('id', hlId)
-    div.innerHTML = highlightTemplate({id: hlId, theme: theme})
+    div.innerHTML = highlightTemplate({id: hlId, theme, styles})
 
     pi.query('body').append(div)
     pi.query(hlSrcId).value = inputIsElement ? pi.query(input).value : input
 
+    CMAssist.requireTheme(theme)
     CMAssist.highlight(hlSrcId, mode, hlPreId, (modeInfo) => {
       let theOutput = pi.query(hlCtxId).innerHTML
       pi.query(`#${hlId}`).remove()
-      pi.isFunction(callback) && callback(theOutput, modeInfo, theme);
+      pi.isFunction(callback) && callback(theOutput, hlPreId, modeInfo, theme);
     })
   }
 }
