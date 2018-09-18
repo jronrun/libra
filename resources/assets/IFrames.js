@@ -5,11 +5,11 @@ import pi from '~pi'
 const root = global // window
 
 let encode = (target) => {
-  return pi.sign(target) //return JSON.stringify(target || {})
+  return JSON.stringify(target || {})
 }
 
 let decode = (target) => {
-  return pi.deepUnsign(target || '{}') // return JSON.parse(target || '{}')
+  return JSON.parse(target || '{}')
 }
 
 const isRoot = (targetWin) => {
