@@ -51,7 +51,7 @@
                   :xs6="rightFlex.xs6"
                   :xs12="rightFlex.xs12"
                   :style="style.flex" ref="flex_view">
-            <v-card :style="style.card" :width="flexViewWidth" :id="flexViewCardId">
+            <v-card :style="style.card" :width="flexViewWidth" :height="flexViewHeight" :id="flexViewCardId">
 
             </v-card>
           </v-flex>
@@ -118,6 +118,7 @@
         xs12: false
       },
       flexViewWidth: 0,
+      flexViewHeight: 0,
       style: {
         layout: {
           margin: 0,
@@ -132,8 +133,7 @@
         },
         card: {
           overflow: 'hidden',
-          'box-shadow': 'none',
-          height: '100%'
+          'box-shadow': 'none'
         }
       },
       drawer: false,
@@ -220,6 +220,8 @@
           } else if (this.rightFlex.xs12) {
             this.flexViewWidth = breakpoint.width
           }
+
+          this.flexViewHeight = breakpoint.height - this.$refs.header.computedHeight
         }
       },
       handleMirrorResize() {
