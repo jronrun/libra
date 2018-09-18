@@ -2,7 +2,7 @@
   <v-app id="athena">
 
     <v-navigation-drawer fixed app v-model="drawer" :dark="$vuetify.dark" ref="drawer">
-      <v-img :aspect-ratio="16/9" src="/bg/34.jpg">
+      <v-img :aspect-ratio="16/9" src="/bg/7.jpg">
         <v-layout pa-2 column fill-height class="lightbox white--text">
           <v-spacer></v-spacer>
           <v-flex shrink>

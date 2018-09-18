@@ -402,7 +402,7 @@ class IFrames {
       mozallowfullscreen, webkitallowfullscreen, referrerpolicy, scrolling, sandbox, seamless, src, srcdoc
     })
 
-    pi.querySelector(selector).append(iFrame)
+    pi.querySelector(selector).appendChild(iFrame)
 
     try {
       frameAssist.document = frameAssist.getDocument()

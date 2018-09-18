@@ -748,7 +748,7 @@ class CMAssist {
     div.setAttribute('id', hlId)
     div.innerHTML = highlightTemplate({id: hlId, theme, styles})
 
-    pi.query('body').append(div)
+    pi.query('body').appendChild(div)
     pi.query(hlSrcId).value = inputIsElement ? pi.query(input).value : input
 
     CMAssist.requireTheme(theme)

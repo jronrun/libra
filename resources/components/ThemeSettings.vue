@@ -204,6 +204,8 @@
 
     mounted() {
       this.$libra.restoreTheme(this).then((theme) => {
+        if (!theme) {return}
+
         this.themeColor = theme.color
         this.sideBarOption = theme.dark
       })

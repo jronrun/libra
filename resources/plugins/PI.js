@@ -110,7 +110,7 @@ function appendToHead(elId = core.uniqueId('#head-el-'), definedEl) {
   if (existStyle) existStyle.remove()
 
   definedEl.setAttribute('id', elId.substring(1))
-  document.querySelector('head').append(definedEl)
+  document.querySelector('head').appendChild(definedEl)
 }
 
 core.css = (style, styleId) => {
