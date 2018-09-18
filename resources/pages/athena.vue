@@ -28,6 +28,11 @@
     <v-toolbar color="primary" fixed :dark="$vuetify.dark" app ref="header" height="50">
       <v-toolbar-side-icon dark @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-spacer></v-spacer>
+
+      <v-btn icon dark :loading="composeInfo.loading" @click="toggleCompose">
+          <v-icon>{{composeInfo.icon}}</v-icon>
+      </v-btn>
+
     </v-toolbar>
 
     <v-content>
@@ -95,6 +100,12 @@
     target.xs12 = xs12
   }
 
+  const defaultComposeType = 1
+  const composeIcons = ['edit', 'visibility', 'aspect_ratio']
+  const nextComposeType = (type) => {
+    return ((type + 1) > 3) ? 1 : (type + 1)
+  }
+
   export default {
     layout: 'blank',
     components: {
@@ -107,6 +118,11 @@
       code: '',
       mirrorOptions: null,
       flexViewCardId: 'flexViewCard',
+      composeInfo: {
+        type: defaultComposeType,
+        icon: composeIcons[defaultComposeType],
+        loading: false
+      },
       leftFlex: {
         visible: true,
         xs6: false,
@@ -177,6 +193,14 @@
     },
 
     methods: {
+      toggleCompose() {
+        this.composeInfo.loading = true
+        this.composeInfo.type = nextComposeType(this.composeInfo.type)
+
+        this.composeInfo.icon = composeIcons[nextComposeType(this.composeInfo.type) - 1]
+        this.compose(this.composeInfo.type)
+        pi.delay(() => this.composeInfo.loading = false, 600)
+      },
       // 1 left flex full, 2 half left & half right, 3 right flex full
       compose(type = 1) {
         switch (type) {
