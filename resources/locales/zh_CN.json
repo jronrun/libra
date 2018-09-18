@@ -20,7 +20,12 @@
     "password": "密码"
   },
   "button": {
-    "close": "关闭"
+    "close": "关闭",
+    "toggle": {
+      "toolbar": "菜单",
+      "menu": "目录",
+      "preview": "预览"
+    }
   },
   "login": {
     "title": "登录 - 天秤座",
@@ -39,9 +44,7 @@
     }
   },
   "athena": {
-    "toolbar": {
-      "toggle": "菜单"
-    }
+
   },
   "invalid": {
     "credentials": "用户名或密码不正确, 请重新输入.",

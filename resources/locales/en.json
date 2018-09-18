@@ -20,7 +20,12 @@
     "password": "Password"
   },
   "button": {
-    "close": "Close"
+    "close": "Close",
+    "toggle": {
+      "toolbar": "Toolbar",
+      "menu": "Menu",
+      "preview": "Preview"
+    }
   },
   "directive": {
 
@@ -42,9 +47,7 @@
     }
   },
   "athena": {
-    "toolbar": {
-      "toggle": "工具栏"
-    }
+
   },
   "invalid": {
     "credentials": "Username or password is incorrect, try again.",

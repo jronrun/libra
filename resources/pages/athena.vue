@@ -90,7 +90,7 @@
     NMAssist.requireTheme('lemon')
   }
 
-  const RESTORE_KEY = 'mirror_restore_data'
+  const RESTORE_KEY = 'athena'
   const doCompose = (target, visible = false, xs6 = false, xs12 = false) => {
     target.visible = visible
     target.xs6 = xs6
@@ -104,6 +104,8 @@
   }
 
   const ATHENA_TOOLBAR_EVENT = 'ATHENA_TOOLBAR'
+  const ATHENA_DRAWER_EVENT = 'ATHENA_DRAWER'
+  const ATHENA_PREVIEW_EVENT = 'ATHENA_PREVIEW'
 
   export default {
     layout: 'blank',
@@ -123,7 +125,19 @@
           event: ATHENA_TOOLBAR_EVENT,
           color: 'purple',
           icon: 'aspect_ratio',
-          label: 'athena.toolbar.toggle'
+          label: 'button.toggle.toolbar'
+        },
+        {
+          event: ATHENA_DRAWER_EVENT,
+          color: 'cyan',
+          icon: 'menu',
+          label: 'button.toggle.menu'
+        },
+        {
+          event: ATHENA_PREVIEW_EVENT,
+          color: 'teal',
+          icon: 'visibility',
+          label: 'button.toggle.preview'
         }
       ],
       composeInfo: {
@@ -186,7 +200,6 @@
       })
 
       this.frameInstance = IFrames.create({}, `#${this.flexViewCardId}`)
-      this.frameInstance.openUrl('/entry')
     },
 
     created() {
@@ -198,6 +211,14 @@
       global.getApp.$on(ATHENA_TOOLBAR_EVENT, () => {
         this.toolbarHidden = !this.toolbarHidden
         pi.delay(() => this.handleResize(), 400)
+      })
+
+      global.getApp.$on(ATHENA_DRAWER_EVENT, () => {
+        this.drawer = !this.drawer
+      })
+
+      global.getApp.$on(ATHENA_PREVIEW_EVENT, () => {
+        this.toggleCompose()
       })
     },
 
@@ -304,14 +325,28 @@
         //TODO rem
         global.tt=this
         global.IFrames = IFrames
+        global.pi=pi
       },
 
       initRestore() {
         let that = this
-        this.instance.state(pi.store(RESTORE_KEY))
+
+        const data = pi.store(RESTORE_KEY)
+        this.instance.state(data.entry)
+        this.drawer = data.drawer
+        this.toolbarHidden = data.toolbarHidden
+
+        this.frameInstance.openUrl('/entry', () => {
+          that.compose(data.composeType)
+        })
 
         global.onbeforeunload = () => {
-          pi.store(RESTORE_KEY, that.instance.state())
+          pi.store(RESTORE_KEY, {
+            drawer: that.drawer,
+            composeType: that.composeInfo.type,
+            toolbarHidden: that.toolbarHidden,
+            entry: that.instance.state()
+          })
         }
       },
       initDirectives() {
