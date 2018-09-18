@@ -26,6 +26,14 @@
       perfectScroll: null,
     }),
 
+    created() {
+      if (process.browser) {
+        this.$nextTick(() => {
+          this.$nuxt.$loading.start()
+        })
+      }
+    },
+
     methods: {
       importTest() {
         import('~/assets/MarkdownAssist').then((module)=>{
@@ -78,6 +86,12 @@
           that.previewInput({input, mode, theme})
         }
       })
+
+      if (process.browser) {
+        this.$nextTick(() => {
+          this.$nuxt.$loading.finish()
+        })
+      }
 
       //TODO rem
       global.ee = this

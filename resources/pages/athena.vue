@@ -203,6 +203,12 @@
     },
 
     created() {
+      if (process.browser) {
+        this.$nextTick(() => {
+          this.$nuxt.$loading.start()
+        })
+      }
+
       global.getApp = this
       global.getApp.$on('APP_THEME_SETTINGS', () => {
         this.openThemeSettings()
@@ -252,6 +258,7 @@
             break
         }
 
+        this.composeInfo.type = type
         pi.delay(() => this.handleResize(), 300)
 
         if (1 !== type) {
@@ -339,6 +346,10 @@
         this.frameInstance.openUrl('/entry', () => {
           if (that.composeInfo.type !== data.composeType) {
             that.compose(data.composeType)
+          }
+
+          if (process.browser) {
+            that.$nuxt.$loading.finish()
           }
         })
 
