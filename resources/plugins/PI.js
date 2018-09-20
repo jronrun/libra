@@ -236,4 +236,23 @@ core.isURL = (text) => {
   return /^(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/.test(text)
 }
 
+/**
+ * Replace HTML, https://plainjs.com/javascript/manipulation/replace-a-dom-element-36/
+ * @param oldEl   html element
+ * @param newEl   html element or html string
+ */
+core.replaceHTML = (oldEl, newEl) => {
+  const theNewEl = isString(newEl) ? core.createElementFromHTML(newEl) : newEl
+  oldEl.parentNode.replaceChild(theNewEl, oldEl)
+}
+
+// https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
+core.createElementFromHTML = (htmlString) => {
+  const div = document.createElement('div')
+  div.innerHTML = htmlString.trim()
+
+  // Change this to div.childNodes to support multiple top-level nodes
+  return div.firstChild
+}
+
 export default core

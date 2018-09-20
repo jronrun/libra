@@ -70,6 +70,17 @@ class MarkdownAssist {
     // Highlight options, see CMAssist.getHighlight
     CMAssistHighlightOptions = {}
   }) {
+    this.isCMAssistHighlight = null == highlight && null != CMAssist
+
+    // Highlight using CMAssist
+    if (this.isCMAssistHighlight) {
+      highlight = (code, lang) => {
+        lang = lang || 'text'
+        const codeInfo = pi.sign({lang, code})
+        return `<pre class="mirror-hl" data-code="${codeInfo}">${code}</pre>`
+      }
+    }
+
     this.options = {
       html,
       xhtmlOut,
@@ -105,63 +116,44 @@ class MarkdownAssist {
     this.CMAssistHighlightOptions = CMAssistHighlightOptions
   }
 
-  tes(theme) {
-    const hasCMAssist = null != this.CMAssist
+  async [features](method, {input, env = {}, theme}) {
+    let result = this.instance[method](input, env)
+    result = `<article class="markdown-body">${result}</article>`
 
-    // Highlight using CMAssist
-    if (null == this.options.highlight && hasCMAssist) {
-      const that = this
-      const highlight = (code, lang) => {
-        lang = lang || 'text'
-        const highlightOptions = Object.assign({}, that.CMAssistHighlightOptions, {
-          input: code, mode: lang, theme, inputIsElement: false
-        })
+    if (this.isCMAssistHighlight) {
+      const hlId = pi.uniqueId('md-hl-')
+      let div = document.createElement('div')
+      div.setAttribute('id', hlId)
+      div.setAttribute('style', 'display:none;')
+      div.innerHTML = result
+      pi.query('body').appendChild(div)
 
-        console.info(code, `lang: ${lang}, theme: ${theme} 111`)
-        const res = that.CMAssist.getHighlight(highlightOptions)
-        console.info(res, `lang: ${lang}, theme: ${theme} 222`)
-        return res
-      }
-
-      for (let elem of nodes.values()) {
+      const hlEls = pi.querySelector(`#${hlId} pre.mirror-hl`, true)
+      for (let elem of hlEls.values()) {
         const codeInfo = pi.deepUnsign(elem.dataset.code)
 
         const highlightOptions = Object.assign({}, this.CMAssistHighlightOptions, {
           input: codeInfo.code, mode: codeInfo.lang, theme, inputIsElement: false
         })
 
-        const res = this.CMAssist.getHighlight(highlightOptions)
-        elem.innerHTML = res
+        const res = await this.CMAssist.getHighlight(highlightOptions)
+        pi.replaceHTML(elem, res)
       }
 
-      this.instance.set({highlight})
-    }
-  }
-
-  [features](method, {input, env = {}, theme}) {
-    const hasCMAssist = null != this.CMAssist
-
-    // Highlight using CMAssist
-    if (null == this.options.highlight && hasCMAssist) {
-      const highlight = (code, lang) => {
-        lang = lang || 'text'
-        const codeInfo = pi.sign({lang, code, theme})
-        return `<pre class="mirror-hl" data-code="${codeInfo}"><code>${code}</code></pre>`
-      }
-
-      this.instance.set({highlight})
+      const tmpEl = pi.querySelector(`#${hlId}`)
+      result = tmpEl.innerHTML
+      tmpEl.remove()
     }
 
-    let result = this.instance[method](input, env)
-    return `<article class="markdown-body">${result}</article>`
+    return result
   }
 
-  render({input, env = {}, theme}) {
-    return this[features]('render', {input, env, theme})
+  async render({input, env = {}, theme}) {
+    return await this[features]('render', {input, env, theme})
   }
 
-  renderInline({input, env = {}, theme}) {
-    return this[features]('renderInline', {input, env, theme})
+  async renderInline({input, env = {}, theme}) {
+    return await this[features]('renderInline', {input, env, theme})
   }
 
   static containerStyle(styles = '.warning { background-color: #eaea83; padding: 12px; border-radius: 6px;}') {
