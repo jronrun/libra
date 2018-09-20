@@ -5,6 +5,7 @@ import pi from '~pi'
 let markdownAssist
 let loadingMarkdownAssist = false
 const COMPILES = []
+const DEFAULT_COMPILE_KEY = 'default-compile'
 
 const register = ({key = [], handle = async (input, {modeName, theme}) => {}, order = 100}) => {
   COMPILES.push({key, handle, order})
@@ -112,8 +113,11 @@ const getCompiler = (modeName, input) => {
 
 class CompileAssist {
 
-  constructor(options = {}) {
-    this.options = options
+  constructor({
+    // Default handle if none registered compile matched, async (input, {modeName, theme}) => {}
+    defaultHandle = null
+  }) {
+    this.options = {defaultHandle}
   }
 
   /**
@@ -133,9 +137,17 @@ class CompileAssist {
     replacer,       // For 'JSON', 'JSON-LD'; A function that transforms the results.
     space,          // For 'JSON', 'JSON-LD'; Adds indentation, white space, and line break characters to
   } = {}) {
-    const compiler = getCompiler(modeName, input)
+    let compiler = getCompiler(modeName, input)
+
     if (null == compiler) {
-      throw new Error(`There is none registered compiler for ${modeName}, use CompileAssist.register to support`)
+      if (!pi.isFunction(this.options.defaultHandle)) {
+        throw new Error(`There is none registered compiler for ${modeName}, use CompileAssist.register to support`)
+      }
+
+      compiler = {
+        key: [DEFAULT_COMPILE_KEY],
+        handle: this.options.defaultHandle
+      }
     }
 
     return compiler.handle.bind(this)(input, {

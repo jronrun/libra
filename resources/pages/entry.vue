@@ -32,6 +32,12 @@
     }
   }
 
+  const defaultHandle = async (input, {modeName, theme}) => {
+    return await CMAssist.getHighlight(Object.assign({}, CMAssistHighlightOptions, {
+      input, mode: modeName, theme
+    }))
+  }
+
   export default {
     layout: 'blank',
     data: () => ({
@@ -82,22 +88,13 @@
         })
 
         pi.query(`#${this.preview}`).innerHTML = result
-
-        // const that = this
-        // this.text = highlights({
-        //   input, mode, theme,
-        //   callback: (result, elId) => {
-        //     pi.query(`#${that.preview}`).innerHTML = result
-        //     that.scrollCtxId = elId
-        //     that.scrolling()
-        //   }
-        // })
+        this.scrolling()
       }
     },
 
     mounted() {
       const that = this
-      this.compileInstance = new CompileAssist()
+      this.compileInstance = new CompileAssist({defaultHandle})
 
       IFrames.registers({
         REFRESH: (evtName, evtData) => {
