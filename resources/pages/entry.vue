@@ -3,13 +3,6 @@
 </template>
 
 <script>
-  /*
-    import() usage: (https://www.zcfy.cc/article/es-proposal-import-2352.html)
-    import('~/assets/test').then((module)=>{
-      const b = module.default;
-    })
-   */
-
   import pi from '~pi'
   import 'perfect-scrollbar/css/perfect-scrollbar.css'
   import PerfectScrollbar from 'perfect-scrollbar'
@@ -26,6 +19,17 @@
       CompileAssist = require('~/assets/CompileAssist').default,
       IFrames = require('~/assets/IFrames').default
     )
+  }
+
+  const CMAssistHighlightOptions = {
+    styles: {
+      margin: 0,
+      padding: '1rem',
+      overflow: 'auto',
+      position: 'relative',
+      height: '100%',
+      width: '100%'
+    }
   }
 
   export default {
@@ -72,7 +76,8 @@
         }, {
           render: IFrames.getInstance(),
           markdownOptions: {
-            CMAssist
+            CMAssist,
+            CMAssistHighlightOptions
           }
         })
 

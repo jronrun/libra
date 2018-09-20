@@ -86,6 +86,7 @@ register({
 
     if (!markdownAssist) {
       loadingMarkdownAssist = true
+      // https://www.zcfy.cc/article/es-proposal-import-2352.html
       const loaded = await import('~/assets/MarkdownAssist')
       markdownAssist = new loaded.default(markdownOptions)
       loadingMarkdownAssist = false

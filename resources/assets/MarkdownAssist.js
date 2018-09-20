@@ -68,7 +68,9 @@ class MarkdownAssist {
     // CMAssist class
     CMAssist = null,
     // Highlight options, see CMAssist.getHighlight
-    CMAssistHighlightOptions = {}
+    CMAssistHighlightOptions = {},
+    // Render
+    template = (result) => `<article class="markdown-body" style="padding: 1rem;">${result}</article>`
   }) {
     this.isCMAssistHighlight = null == highlight && null != CMAssist
 
@@ -89,7 +91,8 @@ class MarkdownAssist {
       linkify,
       typographer,
       quotes,
-      highlight
+      highlight,
+      template
     }
 
     this.instance = MarkdownIt(this.options)
@@ -118,7 +121,10 @@ class MarkdownAssist {
 
   async [features](method, {input, env = {}, theme}) {
     let result = this.instance[method](input, env)
-    result = `<article class="markdown-body">${result}</article>`
+
+    if (pi.isFunction(this.options.template)) {
+      result = this.options.template(result)
+    }
 
     if (this.isCMAssistHighlight) {
       const hlId = pi.uniqueId('md-hl-')
@@ -154,10 +160,6 @@ class MarkdownAssist {
 
   async renderInline({input, env = {}, theme}) {
     return await this[features]('renderInline', {input, env, theme})
-  }
-
-  static containerStyle(styles = '.warning { background-color: #eaea83; padding: 12px; border-radius: 6px;}') {
-    pi.addStyle(styles, 'container-warning')
   }
 
 }

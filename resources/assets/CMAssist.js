@@ -723,6 +723,15 @@ class CMAssist {
     })
   }
 
+  /**
+   * Highlight
+   * @param input
+   * @param inputIsElement
+   * @param styles
+   * @param mode
+   * @param theme
+   * @returns {Promise<any>}
+   */
   static getHighlight({
     input = '',
     inputIsElement = false,
@@ -755,6 +764,15 @@ class CMAssist {
     })
   }
 
+  /**
+   * Highlights
+   * @param input
+   * @param inputIsElement
+   * @param callback
+   * @param styles
+   * @param mode
+   * @param theme
+   */
   static highlights({
       input = '',
       inputIsElement = false,
