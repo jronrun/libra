@@ -3,17 +3,27 @@
 </template>
 
 <script>
+  /*
+    import() usage: (https://www.zcfy.cc/article/es-proposal-import-2352.html)
+    import('~/assets/test').then((module)=>{
+      const b = module.default;
+    })
+   */
+
   import pi from '~pi'
   import 'perfect-scrollbar/css/perfect-scrollbar.css'
   import PerfectScrollbar from 'perfect-scrollbar'
 
+  let CompileAssist
   let MarkdownAssist
   let highlights
   let IFrames
+  let CMAssist
   if (process.browser) {
     (
-      { highlights } = require('~/plugins/highlights'),
-        // MarkdownAssist = require('~/assets/MarkdownAssist').default,
+      { CMAssist, highlights } = require('~/plugins/highlights'),
+      // MarkdownAssist = require('~/assets/MarkdownAssist').default,
+      CompileAssist = require('~/assets/CompileAssist').default,
       IFrames = require('~/assets/IFrames').default
     )
   }
@@ -24,6 +34,7 @@
       preview: 'preview',
       scrollCtxId: null,
       perfectScroll: null,
+      compileInstance: null
     }),
 
     created() {
@@ -35,12 +46,6 @@
     },
 
     methods: {
-      importTest() {
-        import('~/assets/MarkdownAssist').then((module)=>{
-          const b = module.default;
-          console.log(b)
-        })
-      },
       scrolling() {
         if (this.perfectScroll) {
           this.perfectScroll.update()
@@ -57,26 +62,37 @@
         }
       },
 
-      previewInput({input, mode, theme}) {
-        if (pi.isURL(input)) {
-          IFrames.getInstance().openUrl(input)
-          return
-        }
+      async previewInput({input, mode, theme}) {
+        const modeInfo = CMAssist.langInfo(mode) || {}
 
-        const that = this
-        this.text = highlights({
-          input, mode, theme,
-          callback: (result, elId) => {
-            pi.query(`#${that.preview}`).innerHTML = result
-            that.scrollCtxId = elId
-            that.scrolling()
+        const result = await this.compileInstance.compile({
+          input,
+          modeName: modeInfo.name,
+          theme
+        }, {
+          render: IFrames.getInstance(),
+          markdownOptions: {
+            CMAssist
           }
         })
+
+        pi.query(`#${this.preview}`).innerHTML = result
+
+        // const that = this
+        // this.text = highlights({
+        //   input, mode, theme,
+        //   callback: (result, elId) => {
+        //     pi.query(`#${that.preview}`).innerHTML = result
+        //     that.scrollCtxId = elId
+        //     that.scrolling()
+        //   }
+        // })
       }
     },
 
     mounted() {
       const that = this
+      this.compileInstance = new CompileAssist()
 
       IFrames.registers({
         REFRESH: (evtName, evtData) => {
@@ -95,6 +111,7 @@
 
       //TODO rem
       global.ee = this
+      global.pi=pi
     }
   }
 </script>

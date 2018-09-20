@@ -107,6 +107,10 @@
   const ATHENA_DRAWER_EVENT = 'ATHENA_DRAWER'
   const ATHENA_PREVIEW_EVENT = 'ATHENA_PREVIEW'
 
+  const INPUT_READ_NOTIFY = {
+    OPEN: 2, CLOSE: 3
+  }
+
   export default {
     layout: 'blank',
     components: {
@@ -215,8 +219,7 @@
       })
 
       global.getApp.$on(ATHENA_TOOLBAR_EVENT, () => {
-        this.toolbarHidden = !this.toolbarHidden
-        pi.delay(() => this.handleResize(), 400)
+        this.toggleToolbar()
       })
 
       global.getApp.$on(ATHENA_DRAWER_EVENT, () => {
@@ -233,6 +236,10 @@
     },
 
     methods: {
+      toggleToolbar() {
+        this.toolbarHidden = !this.toolbarHidden
+        pi.delay(() => this.handleResize(), 400)
+      },
       toggleCompose() {
         this.composeInfo.loading = true
         this.composeInfo.type = nextComposeType(this.composeInfo.type)
@@ -328,11 +335,13 @@
         this.initRestore()
         this.initDirectives()
         this.instance.setNotifyContentHandle(this.syncPreview)
+        this.instance.inputReadNotifyTgl(INPUT_READ_NOTIFY.OPEN)
 
         //TODO rem
         global.tt=this
         global.IFrames = IFrames
         global.pi=pi
+        global.NMAssist = NMAssist
       },
 
       initRestore() {
@@ -363,11 +372,11 @@
         }
       },
       initDirectives() {
+        const that = this
         const assistDirective = new NMAssistDirective(this.instance)
         assistDirective.registerHandle({
-          w: function (args, cm) {
-            alert(JSON.stringify(args))
-            this.w(args,cm)
+          menu: function (args, cm) {
+            that.toggleToolbar()
           }
         })
 

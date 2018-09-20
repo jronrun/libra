@@ -723,6 +723,38 @@ class CMAssist {
     })
   }
 
+  static getHighlight({
+    input = '',
+    inputIsElement = false,
+    styles = {
+      margin: 0,
+      padding: '1rem',
+      overflow: 'hidden',
+      position: 'relative',
+      height: '100%',
+      width: '100%'
+    },
+    mode = 'text',
+    theme = 'default'
+  }) {
+    return new Promise((resolve, reject) => {
+      try {
+        CMAssist.highlights({
+          input,
+          inputIsElement,
+          styles,
+          mode,
+          theme,
+          callback: (result) => {
+            resolve(result)
+          }
+        })
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+
   static highlights({
       input = '',
       inputIsElement = false,

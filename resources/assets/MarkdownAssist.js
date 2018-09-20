@@ -15,35 +15,9 @@ import pluginDeflist from 'markdown-it-deflist'
 import pluginContainer from 'markdown-it-container'
 import pluginIns from 'markdown-it-ins'
 
-import './css/markdown.styl'
+import 'github-markdown-css'
 
 const features = Symbol('features')
-
-const defaultOptions = {
-  html:         true,         // Enable HTML tags in source
-  xhtmlOut:     false,        // Use '/' to close single tags (<br />).
-                              // This is only for full CommonMark compatibility.
-  breaks:       false,        // Convert '\n' in paragraphs into <br>
-  langPrefix:   'language-',  // CSS language prefix for fenced blocks. Can be
-                              // useful for external highlighters.
-  linkify:      true,         // Autoconvert URL-like text to links
-
-  // Enable some language-neutral replacement + quotes beautification
-  typographer:  true,
-
-  // Double + single quotes replacement pairs, when typographer enabled,
-  // and smartquotes on. Could be either a String or an Array.
-  //
-  // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
-  // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-  quotes: '“”‘’',
-
-  // Highlighter function. Should return escaped HTML,
-  // or '' if the source string is not changed and should be escaped externaly.
-  // If result starts with <pre... internal wrapper is skipped.
-  //highlight(/*str, lang*/) { return '' }
-  highlight: null
-}
 
 // https://markdown-it.github.io/
 // Inject line numbers for sync scroll. Notes:
@@ -61,96 +35,53 @@ const injectLineNumbers = (tokens, idx, options, env, slf) => {
   return slf.renderToken(tokens, idx, options, env, slf)
 }
 
-// const features11 = (method, src, env, theme, callback) => {
-//   var hasMirror = !pi.isBlank(options.mirror), hasOutput = null != options.output && $(options.output).length;
-//   if (hasOutput) {
-//     $(options.output).hide();
-//   }
-//
-//   //highlight using codemirror
-//   if (null == inst.options.highlight && hasMirror) {
-//     inst.options.highlight = function (code, lang) {
-//       var theTmpl = '<pre class="mirror-hl" data-lang="<%= pi.sign(lang) %>" data-code="<%= pi.sign(code)%>"><code><%=code %></code></pre>';
-//       return tmpl(theTmpl, {
-//         lang: lang || 'text',
-//         code: inst.utils.escapeHtml(code)
-//       });
-//     }
-//   }
-//
-//   var markedHtml = inst[method](src, env), tmpId = 'tmp-mdit-' + pi.uniqueId(),
-//     inRoot = function (subSelector) {
-//       return tmpId + ' ' + subSelector;
-//     };
-//
-//   $('<div>').attr({ id: tmpId}).css({ display: 'none'}).appendTo('body');
-//   $(tmpId = sel(tmpId)).html([
-//     '<article class="markdown-body">',
-//     markedHtml,
-//     '</article>'
-//   ].join('\n'));
-//
-//   var featuresLast = function () {
-//     $(inRoot('a.anchor')).html(anchorLinkSymbol);
-//     $(inRoot('blockquote')).css({
-//       margin: '0 0 1rem'
-//     });
-//     $(inRoot('table')).addClass('table table-hover table-sm');
-//     $(inRoot('input[type="checkbox"]')).attr({disabled: true}).addClass('disabled');
-//
-//     var resultH = $(tmpId).html();
-//     $(tmpId).remove();
-//
-//     if (hasOutput) {
-//       $(options.output).html(resultH).fadeIn(1000);
-//     }
-//
-//     $.isFunction(callback) && callback(resultH);
-//   };
-//
-//   if (hasMirror) {
-//     var mirrorHls = $(inRoot('pre.mirror-hl')), hCount = mirrorHls.length;
-//     if (hCount > 0) {
-//       mirrorHls.each(function () {
-//         var info = pi.data(this), thiz = this, langInfo = (options.mirror.modeInfo(info.lang) || {});
-//
-//         options.mirror.highlights({
-//           input: pi.unescape(info.code),
-//           mode: langInfo.mime || langInfo.mode || 'text',
-//           theme: theme || 'lemon',
-//           style: {
-//             height: '100%',
-//             margin: -16,
-//             padding: '1rem',
-//             'font-size': 14,
-//             'overflow-x': 'auto'
-//           },
-//           resultHandle: function (ret) {
-//             $(thiz).html(ret);
-//             hCount--;
-//             if (0 === hCount) {
-//               featuresLast();
-//             }
-//           }
-//         });
-//       });
-//     } else {
-//       featuresLast();
-//     }
-//   } else {
-//     featuresLast();
-//   }
-//
-//   return true;
-// }
-
+/**
+ * https://markdown-it.github.io/markdown-it
+ */
 class MarkdownAssist {
 
-  constructor(instanceOfCMAssist, markdownOptions = {}) {
-    this.mirror = instanceOfCMAssist
-    this.markdownOptions = Object.assign(defaultOptions, markdownOptions)
+  constructor({
+    html =         true,         // Enable HTML tags in source
+    xhtmlOut =     false,        // Use '/' to close single tags (<br />).
+                                 // This is only for full CommonMark compatibility.
+    breaks =       false,        // Convert '\n' in paragraphs into <br>
+    langPrefix =   'language-',  // CSS language prefix for fenced blocks. Can be
+                                 // useful for external highlighters.
+    linkify =      true,         // Autoconvert URL-like text to links
 
-    this.instance = MarkdownIt(this.markdownOptions)
+    // Enable some language-neutral replacement + quotes beautification
+    typographer =  true,
+
+    // Double + single quotes replacement pairs, when typographer enabled,
+    // and smartquotes on. Could be either a String or an Array.
+    //
+    // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
+    // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
+    quotes = '“”‘’',
+
+    // Highlighter function. Should return escaped HTML,
+    // or '' if the source string is not changed and should be escaped externaly.
+    // If result starts with <pre... internal wrapper is skipped.
+    //highlight(/*source, lang*/) { return '' }
+    highlight = null,
+
+    // CMAssist class
+    CMAssist = null,
+    // Highlight options, see CMAssist.getHighlight
+    CMAssistHighlightOptions = {}
+  }) {
+    this.options = {
+      html,
+      xhtmlOut,
+      breaks,
+      langPrefix,
+      linkify,
+      typographer,
+      quotes,
+      highlight
+    }
+
+    this.instance = MarkdownIt(this.options)
       .use(pluginTocAndAnchor, {
         anchorClassName: 'anchor',
         anchorLinkSymbol: ''
@@ -166,34 +97,71 @@ class MarkdownAssist {
       .use(pluginContainer)
       .use(pluginIns)
 
-    MarkdownAssist.containerStyle()
-    this.instance.renderer.rules.paragraph_open = this.instance.renderer.rules.heading_open = injectLineNumbers
+    this.instance.renderer.rules.paragraph_open =
+      this.instance.renderer.rules.heading_open =
+        injectLineNumbers
+
+    this.CMAssist = CMAssist
+    this.CMAssistHighlightOptions = CMAssistHighlightOptions
   }
 
-  [features](method, src, env, theme, callback) {
-    const hasMirror = !this.mirror
+  tes(theme) {
+    const hasCMAssist = null != this.CMAssist
 
-    // highlight using code mirror
-    if (null == this.markdownOptions.highlight && hasMirror) {
-      this.markdownOptions.highlight = (code, lang = 'text') => {
-        const dataLang = pi.sign(lang)
-        const dataCode = pi.sign(this.instance.utils.escapeHtml(code))
-        return `<pre class="mirror-hl" data-lang="${dataLang}" data-code="${dataCode}"><code>${code}</code></pre>`
+    // Highlight using CMAssist
+    if (null == this.options.highlight && hasCMAssist) {
+      const that = this
+      const highlight = (code, lang) => {
+        lang = lang || 'text'
+        const highlightOptions = Object.assign({}, that.CMAssistHighlightOptions, {
+          input: code, mode: lang, theme, inputIsElement: false
+        })
+
+        console.info(code, `lang: ${lang}, theme: ${theme} 111`)
+        const res = that.CMAssist.getHighlight(highlightOptions)
+        console.info(res, `lang: ${lang}, theme: ${theme} 222`)
+        return res
       }
+
+      for (let elem of nodes.values()) {
+        const codeInfo = pi.deepUnsign(elem.dataset.code)
+
+        const highlightOptions = Object.assign({}, this.CMAssistHighlightOptions, {
+          input: codeInfo.code, mode: codeInfo.lang, theme, inputIsElement: false
+        })
+
+        const res = this.CMAssist.getHighlight(highlightOptions)
+        elem.innerHTML = res
+      }
+
+      this.instance.set({highlight})
+    }
+  }
+
+  [features](method, {input, env = {}, theme}) {
+    const hasCMAssist = null != this.CMAssist
+
+    // Highlight using CMAssist
+    if (null == this.options.highlight && hasCMAssist) {
+      const highlight = (code, lang) => {
+        lang = lang || 'text'
+        const codeInfo = pi.sign({lang, code, theme})
+        return `<pre class="mirror-hl" data-code="${codeInfo}"><code>${code}</code></pre>`
+      }
+
+      this.instance.set({highlight})
     }
 
-    const markedHtml = this.instance[method](src, env)
-    return markedHtml
-
-
+    let result = this.instance[method](input, env)
+    return `<article class="markdown-body">${result}</article>`
   }
 
-  render(src, env, theme, callback) {
-    return this[features]('render', src, env, theme, callback)
+  render({input, env = {}, theme}) {
+    return this[features]('render', {input, env, theme})
   }
 
-  renderInline(src, env, theme) {
-    return this[features]('renderInline', src, env, theme, callback)
+  renderInline({input, env = {}, theme}) {
+    return this[features]('renderInline', {input, env, theme})
   }
 
   static containerStyle(styles = '.warning { background-color: #eaea83; padding: 12px; border-radius: 6px;}') {
