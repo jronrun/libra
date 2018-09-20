@@ -70,7 +70,8 @@ class MarkdownAssist {
     // Highlight options, see CMAssist.getHighlight
     CMAssistHighlightOptions = {},
     // Render
-    template = (result) => `<article class="markdown-body" style="padding: 1rem;">${result}</article>`
+    template = (result) => `<article class="markdown-body" style="padding: 1rem;">${result}</article>`,
+    style = '.warning { background-color: #eaea83; padding: 12px; border-radius: 6px;}'
   }) {
     this.isCMAssistHighlight = null == highlight && null != CMAssist
 
@@ -108,7 +109,7 @@ class MarkdownAssist {
       .use(pluginSup)
       .use(pluginAbbr)
       .use(pluginDeflist)
-      .use(pluginContainer)
+      .use(pluginContainer, 'warning')
       .use(pluginIns)
 
     this.instance.renderer.rules.paragraph_open =
@@ -117,6 +118,8 @@ class MarkdownAssist {
 
     this.CMAssist = CMAssist
     this.CMAssistHighlightOptions = CMAssistHighlightOptions
+
+    pi.addStyle(style, 'md-custom-style')
   }
 
   async [features](method, {input, env = {}, theme}) {
