@@ -100,7 +100,6 @@ class MarkdownAssist {
 
     this.instance = MarkdownIt(this.options)
 
-    this.instance.renderer.rules.tr_open =
     this.instance.renderer.rules.paragraph_open =
       this.instance.renderer.rules.heading_open =
         injectLineNumbers
