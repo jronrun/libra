@@ -27,10 +27,11 @@ const anchorLinkSymbol = '<svg class="octicon octicon-link" viewBox="0 0 16 16" 
 // - Footnotes content causes jumps. Level limit filter it automatically.
 const injectLineNumbers = (tokens, idx, options, env, slf) => {
   let line
-  if (tokens[idx].map && tokens[idx].level === 0) {
-    line = tokens[idx].map[0]
-    tokens[idx].attrJoin('class', 'line')
-    tokens[idx].attrSet('data-line', pi.sign(line))
+  const token = tokens[idx]
+  if (token.map && token.level === 0) {
+    line = token.map[0]
+    token.attrJoin('class', 'line')
+    token.attrSet('data-line', line)
   }
 
   return slf.renderToken(tokens, idx, options, env, slf)
@@ -98,6 +99,13 @@ class MarkdownAssist {
     }
 
     this.instance = MarkdownIt(this.options)
+
+    this.instance.renderer.rules.tr_open =
+    this.instance.renderer.rules.paragraph_open =
+      this.instance.renderer.rules.heading_open =
+        injectLineNumbers
+
+    this.instance
       .use(pluginTocAndAnchor, {
         anchorClassName: 'anchor',
         anchorLinkSymbol: ''
@@ -112,10 +120,6 @@ class MarkdownAssist {
       .use(pluginDeflist)
       .use(pluginContainer, 'warning')
       .use(pluginIns)
-
-    // this.instance.renderer.rules.paragraph_open =
-    //   this.instance.renderer.rules.heading_open =
-    //     injectLineNumbers
 
     this.CMAssist = CMAssist
     this.CMAssistHighlightOptions = CMAssistHighlightOptions
