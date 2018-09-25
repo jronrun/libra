@@ -88,11 +88,13 @@
         })
 
         pi.query(`#${this.preview}`).innerHTML = result
+        this.scrolling()
       }
     },
 
     mounted() {
       const that = this
+      this.scrollCtxId = `#${this.preview}`
       this.compileInstance = new CompileAssist({defaultHandle})
 
       IFrames.registers({
