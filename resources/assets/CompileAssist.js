@@ -137,17 +137,10 @@ class CompileAssist {
     replacer,       // For 'JSON', 'JSON-LD'; A function that transforms the results.
     space,          // For 'JSON', 'JSON-LD'; Adds indentation, white space, and line break characters to
   } = {}) {
-    let compiler = getCompiler(modeName, input)
+    let compiler = this.getCompile(modeName, input)
 
     if (null == compiler) {
-      if (!pi.isFunction(this.options.defaultHandle)) {
-        throw new Error(`There is none registered compiler for ${modeName}, use CompileAssist.register to support`)
-      }
-
-      compiler = {
-        key: [DEFAULT_COMPILE_KEY],
-        handle: this.options.defaultHandle
-      }
+      throw new Error(`There is none registered compiler for ${modeName}, use CompileAssist.register to support`)
     }
 
     return compiler.handle.bind(this)(input, {
@@ -158,6 +151,21 @@ class CompileAssist {
       space,
       markdownOptions
     })
+  }
+
+  getCompile(modeName, input) {
+    let compiler = getCompiler(modeName, input)
+
+    if (null == compiler) {
+      if (pi.isFunction(this.options.defaultHandle)) {
+        compiler = {
+          key: [DEFAULT_COMPILE_KEY],
+          handle: this.options.defaultHandle
+        }
+      }
+    }
+
+    return compiler
   }
 
   /**
