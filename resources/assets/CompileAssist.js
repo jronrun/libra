@@ -130,7 +130,7 @@ class CompileAssist {
    * @param space
    * @param markdownOptions
    */
-  compile({input, modeName, theme}, {
+  async compile({input, modeName, theme}, {
     render,         // For 'HTML', 'URL'; An instance of IFrameAssist
     markdownOptions,  // For 'Markdown', 'GitHub Flavored Markdown'; see MarkdownAssist
 
@@ -143,7 +143,7 @@ class CompileAssist {
       throw new Error(`There is none registered compiler for ${modeName}, use CompileAssist.register to support`)
     }
 
-    const compiled = compiler.handle.bind(this)(input, {
+    const compiled = await compiler.handle.bind(this)(input, {
       modeName,
       theme,
       render,
