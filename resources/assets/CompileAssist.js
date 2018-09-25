@@ -143,7 +143,7 @@ class CompileAssist {
       throw new Error(`There is none registered compiler for ${modeName}, use CompileAssist.register to support`)
     }
 
-    return compiler.handle.bind(this)(input, {
+    const compiled = compiler.handle.bind(this)(input, {
       modeName,
       theme,
       render,
@@ -151,6 +151,11 @@ class CompileAssist {
       space,
       markdownOptions
     })
+
+    return {
+      key: compiler.key,
+      compiled
+    }
   }
 
   getCompile(modeName, input) {

@@ -87,7 +87,7 @@
           }
         })
 
-        pi.query(`#${this.preview}`).innerHTML = result
+        pi.query(`#${this.preview}`).innerHTML = result.compiled
         this.scrolling()
       }
     },
