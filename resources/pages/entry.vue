@@ -8,14 +8,14 @@
   import PerfectScrollbar from 'perfect-scrollbar'
 
   let CompileAssist
-  let MarkdownAssist
+  let MarkdownPreviewAssist
   let highlights
   let IFrames
   let CMAssist
   if (process.browser) {
     (
       { CMAssist, highlights } = require('~/plugins/highlights'),
-      // MarkdownAssist = require('~/assets/MarkdownAssist').default,
+      MarkdownPreviewAssist = require('~/assets/MarkdownPreviewAssist').default,
       CompileAssist = require('~/assets/CompileAssist').default,
       IFrames = require('~/assets/IFrames').default
     )
@@ -115,6 +115,7 @@
       //TODO rem
       global.ee = this
       global.pi=pi
+      global.MarkdownPreviewAssist=MarkdownPreviewAssist
     }
   }
 </script>

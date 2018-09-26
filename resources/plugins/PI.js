@@ -179,6 +179,42 @@ core.isJSON = (target, logMsgIfError = false) => {
   }
 }
 
+core.isWindow = (obj) => {
+  return obj != null && obj === obj.window
+}
+
+core.scrollTop = (elem) => {
+  // Coalesce documents and windows
+  let win
+  if (core.isWindow(elem)) {
+    win = elem
+  } else if (elem.nodeType === 9) {
+    win = elem.defaultView
+  }
+
+  return win ? win['pageYOffset'] : elem['scrollTop']
+}
+
+
+core.offset = (elem) => {
+  // Return zeros for disconnected and hidden (display: none) elements (gh-2310)
+  // Support: IE <=11 only
+  // Running getBoundingClientRect on a
+  // disconnected node in IE throws an error
+  if (!elem.getClientRects || !elem.getClientRects().length ) {
+    return { top: 0, left: 0 }
+  }
+
+  // Get document-relative position by adding viewport scroll to viewport-relative gBCR
+  let rect = elem.getBoundingClientRect()
+  let win = elem.ownerDocument.defaultView
+
+  return {
+    top: rect.top + win.pageYOffset,
+    left: rect.left + win.pageXOffset
+  }
+}
+
 core.querySelector = (selector, isAll = false, context = document) => {
   return true === isAll ? context.querySelectorAll(selector) : context.querySelector(selector)
 }
