@@ -160,6 +160,7 @@ class MarkdownPreviewAssist {
   /**
    * Get markdown source lines count
    * @param eventName
+   * @returns {Promise<any>}
    */
   getLinesCount(eventName = 'LINE_COUNT') {
     const that = this
