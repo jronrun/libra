@@ -1,5 +1,5 @@
 <template>
-  <div :id="preview" style="overflow: hidden;"></div>
+  <div :id="preview" style="overflow: hidden;position: absolute;" v-resize="onResize"></div>
 </template>
 
 <script>
@@ -56,6 +56,16 @@
     },
 
     methods: {
+      onResize() {
+        pi.debounce(this.handleResize, 300, {maxWait: 500})()
+      },
+      handleResize() {
+        const breakpoint = this.$vuetify.breakpoint
+        pi.styles(`#${this.preview}`,{
+          width: `${breakpoint.width}px`,
+          height: `${breakpoint.height}px`
+        })
+      },
       scrolling() {
         if (this.perfectScroll) {
           this.perfectScroll.update()
@@ -88,7 +98,7 @@
         })
 
         pi.query(`#${this.preview}`).innerHTML = result.compiled
-        // this.scrolling()
+        this.scrolling()
       }
     },
 
