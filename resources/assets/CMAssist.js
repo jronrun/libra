@@ -633,6 +633,10 @@ class CMAssist {
     }
   }
 
+  lineCount() {
+    return this.instance.lineCount()
+  }
+
   linesInfo(mode = 'local') {
     let cmLines = [], lc = this.instance.lineCount()
     cmLines[0] = 0

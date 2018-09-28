@@ -9,12 +9,11 @@
 
   let CompileAssist
   let MarkdownPreviewAssist
-  let highlights
   let IFrames
   let CMAssist
   if (process.browser) {
     (
-      { CMAssist, highlights } = require('~/plugins/highlights'),
+      { CMAssist } = require('~/plugins/highlights'),
       MarkdownPreviewAssist = require('~/assets/MarkdownPreviewAssist').default,
       CompileAssist = require('~/assets/CompileAssist').default,
       IFrames = require('~/assets/IFrames').default
@@ -44,7 +43,8 @@
       preview: 'preview',
       scrollCtxId: null,
       perfectScroll: null,
-      compileInstance: null
+      compileInstance: null,
+      previewInstance: null
     }),
 
     created() {
@@ -88,7 +88,7 @@
         })
 
         pi.query(`#${this.preview}`).innerHTML = result.compiled
-        this.scrolling()
+        // this.scrolling()
       }
     },
 
@@ -96,6 +96,10 @@
       const that = this
       this.scrollCtxId = `#${this.preview}`
       this.compileInstance = new CompileAssist({defaultHandle})
+      this.previewInstance = new MarkdownPreviewAssist({
+        selector: this.scrollCtxId,
+        IFrames
+      })
 
       IFrames.registers({
         REFRESH: (evtName, evtData) => {
@@ -115,7 +119,7 @@
       //TODO rem
       global.ee = this
       global.pi=pi
-      global.MarkdownPreviewAssist=MarkdownPreviewAssist
+      global.PerfectScrollbar=PerfectScrollbar
     }
   }
 </script>

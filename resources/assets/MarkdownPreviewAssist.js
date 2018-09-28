@@ -4,20 +4,14 @@ import pi from '~pi'
 
 const root = global
 
+let lastLineNo = 0
 let scrollMap = null
 let isScrollMapReady = false
 let isScrollMapBuilding = false
 
-/**
- * Build Markdown Scroll Map
- * @param selector    container selector
- * @param line        line selector
- * @param linesCount  source line count
- * @returns {*}
- */
-function buildMarkdownScrollMap({selector, line = '.line', linesCount = 0}) {
+function buildMarkdownScrollMap({selector, lineClass, linesCount = 0}) {
   if (isScrollMapBuilding) {
-    return
+    return []
   }
 
   isScrollMapBuilding = true
@@ -25,12 +19,13 @@ function buildMarkdownScrollMap({selector, line = '.line', linesCount = 0}) {
 
   let _scrollMap = []
   let nonEmptyList = []
-  let lines = pi.querySelector(`${selector} ${line}`, true)
+  let lines = pi.querySelector(`${selector} .${lineClass}`, true)
+  let markdownLinesCount = linesCount
 
   let containerElem = pi.querySelector(selector)
   let offset = pi.scrollTop(containerElem) - pi.offset(containerElem).top
 
-  for (let i = 0; i < linesCount; i++) {
+  for (let idx = 0; idx < markdownLinesCount; idx++) {
     _scrollMap.push(-1)
   }
 
@@ -49,21 +44,21 @@ function buildMarkdownScrollMap({selector, line = '.line', linesCount = 0}) {
     _scrollMap[t] = Math.round(pi.offset(elem).top + offset)
   }
 
-  nonEmptyList.push(linesCount)
-  _scrollMap[linesCount] = containerElem.scrollHeight
+  nonEmptyList.push(markdownLinesCount)
+  _scrollMap[markdownLinesCount] = containerElem.scrollHeight
 
   let pos = 0
   let a
   let b
-  for (i = 1; i < linesCount; i++) {
-    if (_scrollMap[i] !== -1) {
+  for (let idx = 1; idx < markdownLinesCount; idx++) {
+    if (_scrollMap[idx] !== -1) {
       pos++
       continue
     }
 
     a = nonEmptyList[pos]
     b = nonEmptyList[pos + 1]
-    _scrollMap[i] = Math.round((_scrollMap[b] * (i - a) + _scrollMap[a] * (b - i)) / (b - a))
+    _scrollMap[idx] = Math.round((_scrollMap[b] * (idx - a) + _scrollMap[a] * (b - idx)) / (b - a))
   }
 
   scrollMap = _scrollMap
@@ -73,10 +68,124 @@ function buildMarkdownScrollMap({selector, line = '.line', linesCount = 0}) {
   return scrollMap
 }
 
+/**
+ * Assist class for markdown preview,
+ * in source page listen event
+ * <pre>
+    IFrames.registers({
+      LINE_COUNT: () => {
+        // return source line count
+        return {
+          linesCount: that.instanceOfCMAssist.lineCount()
+        }
+      },
+      // listen scroll from preview to markdown source event
+      SCROLL_PV_TO_MD: (evtName, evtData) => {
+      }
+    })
+ * </pre>
+ */
 class MarkdownPreviewAssist {
 
-  constructor() {
+  constructor({
+    selector,                                 // markdown preview container selector
+    lineClass = 'line',                       // line class
+    IFrames = null                            // IFrames
+  }) {
+    this.selector = selector
+    this.lineClass = lineClass
+    this.IFrames = IFrames
 
+    this.markdownToPreview = true        // if synchronize scroll from markdown source to preview
+    this.previewToMarkdown = true        // if synchronize scroll from preview to markdown source
+
+    const that = this
+    this.IFrames.registers({
+      // listen scroll from markdown source to preview event
+      SCROLL_MD_TO_PV: (evtName, evtData) => {
+        that.roll(evtData)
+      }
+    })
+  }
+
+  /**
+   * Synchronize scroll from source to preview
+   * @param top         source top line number
+   * @param bottom      source bottom line number
+   */
+  roll({top, bottom}) {
+    if (!scrollMap) {
+      this.buildScrollMap()
+    }
+
+    if (!isScrollMapReady) {
+      return
+    }
+
+    let lineNo = parseInt(top || 0)
+    let realLineNo = -1
+    let posTo = scrollMap[lineNo]
+
+    if (lineNo === lastLineNo) {
+      return
+    }
+
+    if (pi.isUndefined(posTo)) {
+      if (lineNo > lastLineNo) {
+        let lineEnd = parseInt(bottom || 0);
+        for (i = lineNo; i <= lineEnd; i++) {
+          if (!pi.isUndefined(posTo = scrollMap[i])) {
+            realLineNo = i
+            break
+          }
+        }
+      } else {
+        for (i = lineNo; i >= 0; i--) {
+          if (!pi.isUndefined(posTo = scrollMap[i])) {
+            realLineNo = i
+            break
+          }
+        }
+      }
+    }
+
+    if (pi.isUndefined(posTo) || lastLineNo === realLineNo) {
+      return
+    }
+
+    $sel(viewId).stop(true).animate({
+      scrollTop: posTo
+    }, 100, 'linear');
+    lastLineNo = lineNo;
+  }
+
+  /**
+   * Get markdown source lines count
+   * @param callback
+   * @param eventName
+   */
+  getLinesCount(callback /* ({linesCount}) = {} */, eventName = 'LINE_COUNT') {
+    this.IFrames.getInstance().replyEvent(eventName, {}, (evtData) => {
+      pi.isFunction(callback) && callback(evtData)
+    })
+  }
+
+  /**
+   * Build Markdown Preview Scroll Map
+   */
+  buildScrollMap() {
+    if (!this.markdownToPreview && !this.previewToMarkdown) {
+      return
+    }
+
+    const that = this
+    this.getLinesCount(({linesCount}) => {
+      buildMarkdownScrollMap({
+        linesCount,
+        selector: that.selector,
+        lineClass: that.lineClass
+      })
+    })
   }
 
 }

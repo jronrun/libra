@@ -354,7 +354,7 @@ class IFrames {
   }
 
   /**
-   * Create a new iFrame
+   * Create a new iFrame, http://www.w3school.com.cn/tags/tag_iframe.asp
    * @param id
    * @param name
    * @param align

@@ -184,6 +184,9 @@ core.isWindow = (obj) => {
 }
 
 core.scrollTop = (elem) => {
+  let method = 'scrollTop'
+  let prop = 'pageYOffset'
+
   // Coalesce documents and windows
   let win
   if (core.isWindow(elem)) {
@@ -192,7 +195,7 @@ core.scrollTop = (elem) => {
     win = elem.defaultView
   }
 
-  return win ? win['pageYOffset'] : elem['scrollTop']
+  return win ? win[ prop ] : elem[ method ]
 }
 
 

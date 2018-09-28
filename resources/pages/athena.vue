@@ -199,11 +199,19 @@
 
     mounted() {
       this.$libra.restoreTheme(this)
-      IFrames.registers({
 
+      const that = this
+      IFrames.registers({
+        LINE_COUNT: () => {
+          return {
+            linesCount: that.instance.lineCount()
+          }
+        }
       })
 
-      this.frameInstance = IFrames.create({}, `#${this.flexViewCardId}`)
+      this.frameInstance = IFrames.create({
+        scrolling: 'no'
+      }, `#${this.flexViewCardId}`)
     },
 
     created() {
