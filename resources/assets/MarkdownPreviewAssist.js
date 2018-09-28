@@ -113,9 +113,9 @@ class MarkdownPreviewAssist {
    * @param top         source top line number
    * @param bottom      source bottom line number
    */
-  roll({top, bottom}) {
+  async roll({top, bottom}) {
     if (!scrollMap) {
-      this.buildScrollMap()
+      await this.buildScrollMap()
     }
 
     if (!isScrollMapReady) {
@@ -159,30 +159,30 @@ class MarkdownPreviewAssist {
 
   /**
    * Get markdown source lines count
-   * @param callback
    * @param eventName
    */
-  getLinesCount(callback /* ({linesCount}) = {} */, eventName = 'LINE_COUNT') {
-    this.IFrames.getInstance().replyEvent(eventName, {}, (evtData) => {
-      pi.isFunction(callback) && callback(evtData)
+  getLinesCount(eventName = 'LINE_COUNT') {
+    const that = this
+    return new Promise((resolve) => {
+      that.IFrames.getInstance().replyEvent(eventName, {}, (evtData) => {
+        resolve(evtData)
+      })
     })
   }
 
   /**
    * Build Markdown Preview Scroll Map
    */
-  buildScrollMap() {
+  async buildScrollMap() {
     if (!this.markdownToPreview && !this.previewToMarkdown) {
       return
     }
 
-    const that = this
-    this.getLinesCount(({linesCount}) => {
-      buildMarkdownScrollMap({
-        linesCount,
-        selector: that.selector,
-        lineClass: that.lineClass
-      })
+    let {linesCount} = await this.getLinesCount()
+    buildMarkdownScrollMap({
+      linesCount,
+      selector: this.selector,
+      lineClass: this.lineClass
     })
   }
 
