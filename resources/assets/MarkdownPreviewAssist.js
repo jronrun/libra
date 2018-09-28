@@ -153,9 +153,7 @@ class MarkdownPreviewAssist {
       return
     }
 
-    $sel(viewId).stop(true).animate({
-      scrollTop: posTo
-    }, 100, 'linear');
+    pi.querySelector(`${this.selector}`).scrollTop = posTo
     lastLineNo = lineNo;
   }
 
