@@ -16,7 +16,6 @@
   if (process.browser) {
     (
       { CMAssist } = require('~/plugins/highlights'),
-      MarkdownPreviewAssist = require('~/assets/MarkdownPreviewAssist').default,
       CompileAssist = require('~/assets/CompileAssist').default,
       IFrames = require('~/assets/IFrames').default
     )
