@@ -425,7 +425,12 @@
             that.toggleToolbar()
           },
           live: (args, cm) => {
-
+            const composeType = parseInt(args.get(0) || -1)
+            if (Object.values(COMPOSE_TYPE).includes(composeType)) {
+              that.compose(composeType)
+            } else {
+              that.toggleCompose()
+            }
           }
         })
 
