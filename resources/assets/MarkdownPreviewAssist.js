@@ -251,14 +251,14 @@ class MarkdownPreviewAssist {
     if (pi.isUndefined(posTo)) {
       if (lineNo > lastLineNo) {
         let lineEnd = parseInt(bottom || 0);
-        for (i = lineNo; i <= lineEnd; i++) {
+        for (let i = lineNo; i <= lineEnd; i++) {
           if (!pi.isUndefined(posTo = scrollMap[i])) {
             realLineNo = i
             break
           }
         }
       } else {
-        for (i = lineNo; i >= 0; i--) {
+        for (let i = lineNo; i >= 0; i--) {
           if (!pi.isUndefined(posTo = scrollMap[i])) {
             realLineNo = i
             break
