@@ -4,10 +4,14 @@ import pi from '~pi'
 
 const root = global
 
+const previewScrollListener = Symbol('previewScrollListener')
+
 let lastLineNo = 0
 let scrollMap = null
 let isScrollMapReady = false
 let isScrollMapBuilding = false
+
+let isTempStopScrollBehave = false
 
 function buildMarkdownScrollMap({selector, lineClass, linesCount = 0}) {
   if (isScrollMapBuilding) {
@@ -72,6 +76,8 @@ function buildMarkdownScrollMap({selector, lineClass, linesCount = 0}) {
  * Assist class for markdown preview,
  * in source page listen event
  * <pre>
+ *  let isTempStopScrollBehave = false
+ *
     IFrames.registers({
       LINE_COUNT: () => {
         // return source line count
@@ -80,8 +86,30 @@ function buildMarkdownScrollMap({selector, lineClass, linesCount = 0}) {
         }
       },
       // listen scroll from preview to markdown source event
-      SCROLL_PV_TO_MD: (evtName, evtData) => {
+      SCROLL_PV_TO_MD: (evtName, {line}) => {
+         isTempStopScrollBehave = true
+         that.instanceOfCMAssist.scrollToLine(parseInt(line))
       }
+    })
+
+    scrollMdToPv() {
+      if (isTempStopScrollBehave) {
+        return
+      }
+
+      this.frameInstance.tellEvent('SCROLL_MD_TO_PV', this.instance.visibleLines())
+    }
+
+     const scroll = pi.debounce(scrollMdToPv, 50, {maxWait: 100})
+     that.instanceOfCMAssist = new NMAssist(cm, {
+        scroll
+      })
+
+    that.instanceOfCMAssist.getWrapperElement().addEventListener('touchstart', () => {
+      isTempStopScrollBehave = false
+    })
+    that.instanceOfCMAssist.getWrapperElement().addEventListener('mouseover', () => {
+      isTempStopScrollBehave = false
     })
  * </pre>
  */
@@ -103,9 +131,83 @@ class MarkdownPreviewAssist {
     this.IFrames.registers({
       // listen scroll from markdown source to preview event
       SCROLL_MD_TO_PV: (evtName, evtData) => {
+        console.log('SCROLL_MD_TO_PV')
+        isTempStopScrollBehave = true
         that.roll(evtData)
       }
     })
+
+    this[previewScrollListener] = pi.debounce(this.notify.bind(this), 50, {maxWait: 100})
+    this.switchScrollEvent()
+
+    const scrollContainer = pi.querySelector(this.selector)
+    scrollContainer.addEventListener('touchstart', () => {
+      isTempStopScrollBehave = false
+    })
+    scrollContainer.addEventListener('mouseover', () => {
+      isTempStopScrollBehave = false
+    })
+  }
+
+  switchScrollEvent(isOn = true) {
+    const scrollEventName = 'scroll'
+    const scrollContainer = pi.querySelector(this.selector)
+
+    if (isOn) {
+      scrollContainer.addEventListener(scrollEventName, this[previewScrollListener])
+    } else {
+      scrollContainer.removeEventListener(scrollEventName, this[previewScrollListener])
+    }
+  }
+
+  /**
+   * Synchronize scroll from preview to markdown source
+   * @returns {Promise<void>}
+   */
+  notify() {
+    if (isTempStopScrollBehave) {
+      return
+    }
+
+    if (!this.previewToMarkdown) {
+      return
+    }
+
+    if (!isScrollMapReady) {
+      this.buildScrollMap()
+    }
+
+    if (!isScrollMapReady) {
+      return
+    }
+
+    // line and html map
+    let scrollContainer = pi.querySelector(this.selector)
+    let scrollTop  = pi.scrollTop(scrollContainer)
+    let lines
+    let line
+
+    lines = Object.keys(scrollMap)
+
+    if (lines.length < 1) {
+      return
+    }
+
+    line = lines[0]
+
+    for (let idx = 1; idx < lines.length; idx++) {
+      if (scrollMap[lines[idx]] < scrollTop) {
+        line = lines[idx]
+        continue
+      }
+
+      break
+    }
+
+    if (lastLineNo !== line) {
+      lastLineNo = line
+      this.IFrames.getInstance().replyEvent('SCROLL_PV_TO_MD', {line})
+    }
   }
 
   /**
@@ -114,7 +216,11 @@ class MarkdownPreviewAssist {
    * @param bottom      source bottom line number
    */
   async roll({top, bottom}) {
-    if (!scrollMap) {
+    if (!this.markdownToPreview) {
+      return
+    }
+
+    if (!isScrollMapReady) {
       await this.buildScrollMap()
     }
 
@@ -175,10 +281,6 @@ class MarkdownPreviewAssist {
    * Build Markdown Preview Scroll Map
    */
   async buildScrollMap() {
-    if (!this.markdownToPreview && !this.previewToMarkdown) {
-      return
-    }
-
     let {linesCount} = await this.getLinesCount()
     buildMarkdownScrollMap({
       linesCount,

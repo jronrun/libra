@@ -257,6 +257,10 @@ class CMAssist {
     return this.instance.doc
   }
 
+  getWrapperElement() {
+    return this.instance.getWrapperElement()
+  }
+
   val(data) {
     if (pi.isUndefined(data)) {
       return this.instance.getValue()

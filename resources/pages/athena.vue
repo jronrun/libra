@@ -129,6 +129,7 @@
       mirrorOptions: null,
       flexViewCardId: 'flexViewCard',
       toolbarHidden: false,
+      isTempStopScrollBehave: false,
       settingsButtons: [
         {
           event: ATHENA_TOOLBAR_EVENT,
@@ -211,6 +212,10 @@
           return {
             linesCount: that.instance.lineCount()
           }
+        },
+        SCROLL_PV_TO_MD: (evtName, {line}) => {
+          that.isTempStopScrollBehave = true
+          that.instance.scrollToLine(parseInt(line))
         }
       })
 
@@ -338,11 +343,16 @@
         }
       },
       scrollMdToPv() {
+        if (this.isTempStopScrollBehave) {
+          return
+        }
+
         if (COMPOSE_TYPE.PREVIEW === this.composeInfo.type) {
           this.frameInstance.tellEvent('SCROLL_MD_TO_PV', this.instance.visibleLines())
         }
       },
       onMirrorReady(cm) {
+        let that = this
         const scroll = pi.debounce(this.scrollMdToPv, 50, {maxWait: 100})
         const mirror = new NMAssist(cm, {
           scroll
@@ -357,6 +367,13 @@
         this.initDirectives()
         this.instance.setNotifyContentHandle(this.syncPreview)
         this.instance.inputReadNotifyTgl(INPUT_READ_NOTIFY.OPEN)
+
+        this.instance.getWrapperElement().addEventListener('touchstart', () => {
+          that.isTempStopScrollBehave = false
+        })
+        this.instance.getWrapperElement().addEventListener('mouseover', () => {
+          that.isTempStopScrollBehave = false
+        })
 
         //TODO rem
         global.tt=this
