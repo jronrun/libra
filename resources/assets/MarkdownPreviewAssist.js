@@ -92,6 +92,12 @@ function buildMarkdownScrollMap({selector, lineClass, linesCount = 0}) {
       }
     })
 
+    syncDataToPreview({data}) {
+      this.frameInstance.tellEvent('REFRESH', data)
+    }
+    that.instanceOfCMAssist.setNotifyContentHandle(this.syncDataToPreview)
+    that.instanceOfCMAssist.inputReadNotifyTgl(INPUT_READ_NOTIFY.OPEN)  // open 2, close 3
+
     scrollMdToPv() {
       if (isTempStopScrollBehave) {
         return

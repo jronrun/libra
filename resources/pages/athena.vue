@@ -116,6 +116,8 @@
     return ((type + 1) > 3) ? 1 : (type + 1)
   }
 
+  let markdownScrollListener
+
   export default {
     layout: 'blank',
     components: {
@@ -286,7 +288,7 @@
         pi.delay(() => this.handleResize(), 300)
 
         if (COMPOSE_TYPE.EDITOR !== type) {
-          this.syncPreview({data: this.instance.state()})
+          this.syncDataToPreview({data: this.instance.state()})
         }
       },
       onResize() {
@@ -337,9 +339,18 @@
         this.$vuetify.goTo(0)
         this.themeSettingDrawer = (!this.themeSettingDrawer)
       },
-      syncPreview({data}) {
+      syncDataToPreview({data}) {
         if (this.rightFlex) {
           this.frameInstance.tellEvent('REFRESH', data)
+        }
+      },
+      switchScrollNotify(isOn = true) {
+        const scrollEventName = 'scroll'
+        const cm = this.instance.instance
+        if (isOn) {
+          cm.on(scrollEventName, markdownScrollListener)
+        } else {
+          cm.off(scrollEventName, markdownScrollListener)
         }
       },
       scrollMdToPv() {
@@ -353,10 +364,7 @@
       },
       onMirrorReady(cm) {
         let that = this
-        const scroll = pi.debounce(this.scrollMdToPv, 50, {maxWait: 100})
-        const mirror = new NMAssist(cm, {
-          scroll
-        })
+        const mirror = new NMAssist(cm)
 
         mirror.chgStyle({padding: '8px'})
         mirror.mapPredefineKeys({Esc: 'Ctrl-Esc'})
@@ -365,8 +373,10 @@
         this.handleMirrorResize()
         this.initRestore()
         this.initDirectives()
-        this.instance.setNotifyContentHandle(this.syncPreview)
+        this.instance.setNotifyContentHandle(this.syncDataToPreview)
         this.instance.inputReadNotifyTgl(INPUT_READ_NOTIFY.OPEN)
+        markdownScrollListener = pi.debounce(this.scrollMdToPv, 50, {maxWait: 100})
+        this.switchScrollNotify()
 
         this.instance.getWrapperElement().addEventListener('touchstart', () => {
           that.isTempStopScrollBehave = false
