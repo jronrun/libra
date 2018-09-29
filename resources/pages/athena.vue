@@ -97,18 +97,23 @@
     target.xs12 = xs12
   }
 
-  const defaultComposeType = 1
-  const composeIcons = ['edit', 'visibility', 'aspect_ratio']
-  const nextComposeType = (type) => {
-    return ((type + 1) > 3) ? 1 : (type + 1)
-  }
-
   const ATHENA_TOOLBAR_EVENT = 'ATHENA_TOOLBAR'
   const ATHENA_DRAWER_EVENT = 'ATHENA_DRAWER'
   const ATHENA_PREVIEW_EVENT = 'ATHENA_PREVIEW'
 
   const INPUT_READ_NOTIFY = {
     OPEN: 2, CLOSE: 3
+  }
+
+  // 1 left flex full, 2 half left & half right, 3 right flex full
+  const COMPOSE_TYPE = {
+    EDITOR: 1, PREVIEW: 2, VIEW: 3
+  }
+
+  const defaultComposeType = COMPOSE_TYPE.EDITOR
+  const composeIcons = ['edit', 'visibility', 'aspect_ratio']
+  const nextComposeType = (type) => {
+    return ((type + 1) > 3) ? 1 : (type + 1)
   }
 
   export default {
@@ -256,18 +261,17 @@
         this.compose(this.composeInfo.type)
         pi.delay(() => this.composeInfo.loading = false, 600)
       },
-      // 1 left flex full, 2 half left & half right, 3 right flex full
-      compose(type = 1) {
+      compose(type = COMPOSE_TYPE.EDITOR) {
         switch (type) {
-          case 1:
+          case COMPOSE_TYPE.EDITOR:
             doCompose(this.leftFlex, true, false, true)
             doCompose(this.rightFlex, false)
             break
-          case 2:
+          case COMPOSE_TYPE.PREVIEW:
             doCompose(this.leftFlex, true, true, false)
             doCompose(this.rightFlex, true, true, false)
             break
-          case 3:
+          case COMPOSE_TYPE.VIEW:
             doCompose(this.leftFlex, false)
             doCompose(this.rightFlex, true, false, true)
             break
@@ -276,7 +280,7 @@
         this.composeInfo.type = type
         pi.delay(() => this.handleResize(), 300)
 
-        if (1 !== type) {
+        if (COMPOSE_TYPE.EDITOR !== type) {
           this.syncPreview({data: this.instance.state()})
         }
       },
@@ -333,8 +337,17 @@
           this.frameInstance.tellEvent('REFRESH', data)
         }
       },
+      scrollMdToPv() {
+        if (COMPOSE_TYPE.PREVIEW === this.composeInfo.type) {
+          this.frameInstance.tellEvent('SCROLL_MD_TO_PV', this.instance.visibleLines())
+        }
+      },
       onMirrorReady(cm) {
-        const mirror = new NMAssist(cm)
+        const scroll = pi.debounce(this.scrollMdToPv, 50, {maxWait: 100})
+        const mirror = new NMAssist(cm, {
+          scroll
+        })
+
         mirror.chgStyle({padding: '8px'})
         mirror.mapPredefineKeys({Esc: 'Ctrl-Esc'})
 

@@ -99,6 +99,7 @@
 
         pi.query(`#${this.preview}`).innerHTML = result.compiled
         this.scrolling()
+        this.previewInstance.buildScrollMap()
       }
     },
 
