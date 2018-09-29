@@ -100,6 +100,9 @@ function buildMarkdownScrollMap({selector, lineClass, linesCount = 0}) {
       this.frameInstance.tellEvent('SCROLL_MD_TO_PV', this.instance.visibleLines())
     }
 
+    // toggle scroll from preview to markdown source
+    this.frameInstance.tellEvent('SWITCH_SCROLL_NOTIFY', {isOn: false})
+
      const scroll = pi.debounce(scrollMdToPv, 50, {maxWait: 100})
      that.instanceOfCMAssist = new NMAssist(cm, {
         scroll
@@ -131,14 +134,17 @@ class MarkdownPreviewAssist {
     this.IFrames.registers({
       // listen scroll from markdown source to preview event
       SCROLL_MD_TO_PV: (evtName, evtData) => {
-        console.log('SCROLL_MD_TO_PV')
         isTempStopScrollBehave = true
         that.roll(evtData)
+      },
+      // toggle scroll from preview to markdown source event
+      SWITCH_SCROLL_NOTIFY: (evtName, {isOn}) => {
+        that.switchScrollNotify(isOn)
       }
     })
 
     this[previewScrollListener] = pi.debounce(this.notify.bind(this), 50, {maxWait: 100})
-    this.switchScrollEvent()
+    this.switchScrollNotify()
 
     const scrollContainer = pi.querySelector(this.selector)
     scrollContainer.addEventListener('touchstart', () => {
@@ -149,7 +155,7 @@ class MarkdownPreviewAssist {
     })
   }
 
-  switchScrollEvent(isOn = true) {
+  switchScrollNotify(isOn = true) {
     const scrollEventName = 'scroll'
     const scrollContainer = pi.querySelector(this.selector)
 
