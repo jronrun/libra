@@ -121,11 +121,6 @@
           this.$nuxt.$loading.finish()
         })
       }
-
-      //TODO rem
-      global.ee = this
-      global.pi=pi
-      global.PerfectScrollbar=PerfectScrollbar
     }
   }
 </script>
