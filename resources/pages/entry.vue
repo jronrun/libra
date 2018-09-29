@@ -74,11 +74,6 @@
           this.perfectScroll = new PerfectScrollbar(scrollContainer, {
             maxScrollbarLength: 160
           })
-
-          scrollContainer.addEventListener('ps-scroll-y', (evt) => {
-
-          })
-
         }
       },
 
