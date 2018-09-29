@@ -7,6 +7,8 @@
   import 'perfect-scrollbar/css/perfect-scrollbar.css'
   import PerfectScrollbar from 'perfect-scrollbar'
 
+  const needPreviewAssist = !pi.isRootWindow()
+
   let CompileAssist
   let MarkdownPreviewAssist
   let IFrames
@@ -18,6 +20,10 @@
       CompileAssist = require('~/assets/CompileAssist').default,
       IFrames = require('~/assets/IFrames').default
     )
+  }
+
+  if (process.browser && needPreviewAssist) {
+    MarkdownPreviewAssist = require('~/assets/MarkdownPreviewAssist').default
   }
 
   const CMAssistHighlightOptions = {
@@ -94,7 +100,9 @@
 
         pi.query(`#${this.preview}`).innerHTML = result.compiled
         this.scrolling()
-        this.previewInstance.buildScrollMap()
+        if (needPreviewAssist) {
+          this.previewInstance.buildScrollMap()
+        }
       }
     },
 
@@ -102,10 +110,12 @@
       const that = this
       this.scrollCtxId = `#${this.preview}`
       this.compileInstance = new CompileAssist({defaultHandle})
-      this.previewInstance = new MarkdownPreviewAssist({
-        selector: this.scrollCtxId,
-        IFrames
-      })
+      if (needPreviewAssist) {
+        this.previewInstance = new MarkdownPreviewAssist({
+          selector: this.scrollCtxId,
+          IFrames
+        })
+      }
 
       IFrames.registers({
         REFRESH: (evtName, evtData) => {
@@ -121,6 +131,12 @@
           this.$nuxt.$loading.finish()
         })
       }
+
+      //TODO rem
+      global.ee = this
+      global.pi=pi
+      global.IFrames=IFrames
+      global.PerfectScrollbar=PerfectScrollbar
     }
   }
 </script>

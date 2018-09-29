@@ -183,6 +183,10 @@ core.isWindow = (obj) => {
   return obj != null && obj === obj.window
 }
 
+core.isRootWindow = (targetWin) => {
+  return targetWin ? global.top === targetWin : global.top === global.self
+}
+
 core.scrollTop = (elem) => {
   let method = 'scrollTop'
   let prop = 'pageYOffset'
