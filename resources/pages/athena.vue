@@ -262,10 +262,7 @@
       },
       toggleCompose() {
         this.composeInfo.loading = true
-        this.composeInfo.type = nextComposeType(this.composeInfo.type)
-
-        this.composeInfo.icon = composeIcons[nextComposeType(this.composeInfo.type) - 1]
-        this.compose(this.composeInfo.type)
+        this.compose(nextComposeType(this.composeInfo.type))
         pi.delay(() => this.composeInfo.loading = false, 600)
       },
       compose(type = COMPOSE_TYPE.EDITOR) {
@@ -285,6 +282,7 @@
         }
 
         this.composeInfo.type = type
+        this.composeInfo.icon = composeIcons[nextComposeType(this.composeInfo.type) - 1]
         pi.delay(() => this.handleResize(), 300)
 
         if (COMPOSE_TYPE.EDITOR !== type) {
@@ -423,14 +421,16 @@
         const that = this
         const assistDirective = new NMAssistDirective(this.instance)
         assistDirective.registerHandle({
-          menu: function (args, cm) {
+          menu: (args, cm) => {
             that.toggleToolbar()
+          },
+          live: (args, cm) => {
+
           }
         })
 
-        assistDirective.register('test', false, function (args, cm) {
-          alert('test')
-          this.w(args,cm)
+        assistDirective.register('project', false, (args, cm) => {
+          that.drawer = !that.drawer
         })
 
       }
